@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\FactureRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+
+#[ORM\Entity(repositoryClass: FactureRepository::class)]
+#[ApiResource]
+class Facture
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $typeOfCharge = null;
+
+    #[ORM\Column]
+    private ?float $totalAmount = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $billDate = null;
+
+    #[ORM\ManyToOne(inversedBy: 'factures')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Appartement $appartment = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTypeOfCharge(): ?string
+    {
+        return $this->typeOfCharge;
+    }
+
+    public function setTypeOfCharge(string $typeOfCharge): static
+    {
+        $this->typeOfCharge = $typeOfCharge;
+
+        return $this;
+    }
+
+    public function getTotalAmount(): ?float
+    {
+        return $this->totalAmount;
+    }
+
+    public function setTotalAmount(float $totalAmount): static
+    {
+        $this->totalAmount = $totalAmount;
+
+        return $this;
+    }
+
+    public function getBillDate(): ?\DateTime
+    {
+        return $this->billDate;
+    }
+
+    public function setBillDate(\DateTime $billDate): static
+    {
+        $this->billDate = $billDate;
+
+        return $this;
+    }
+
+    public function getAppartment(): ?Appartement
+    {
+        return $this->appartment;
+    }
+
+    public function setAppartment(?Appartement $appartment): static
+    {
+        $this->appartment = $appartment;
+
+        return $this;
+    }
+}

@@ -37,9 +37,16 @@ class Appartement
     #[ORM\OneToMany(targetEntity: Chambre::class, mappedBy: 'appartment')]
     private Collection $chambres;
 
+    /**
+     * @var Collection<int, Facture>
+     */
+    #[ORM\OneToMany(targetEntity: Facture::class, mappedBy: 'appartment')]
+    private Collection $factures;
+
     public function __construct()
     {
         $this->chambres = new ArrayCollection();
+        $this->factures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -119,6 +126,36 @@ class Appartement
             // set the owning side to null (unless already changed)
             if ($chambre->getAppartment() === $this) {
                 $chambre->setAppartment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Facture>
+     */
+    public function getFactures(): Collection
+    {
+        return $this->factures;
+    }
+
+    public function addFacture(Facture $facture): static
+    {
+        if (!$this->factures->contains($facture)) {
+            $this->factures->add($facture);
+            $facture->setAppartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFacture(Facture $facture): static
+    {
+        if ($this->factures->removeElement($facture)) {
+            // set the owning side to null (unless already changed)
+            if ($facture->getAppartment() === $this) {
+                $facture->setAppartment(null);
             }
         }
 
