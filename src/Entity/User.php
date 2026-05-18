@@ -45,6 +45,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Appartement::class, mappedBy: 'landlord')]
     private Collection $appartements;
 
+    #[ORM\OneToOne(mappedBy: 'tenant', cascade: ['persist', 'remove'])]
+    private ?Chambre $chambre = null;
+
     public function __construct()
     {
         $this->appartements = new ArrayCollection();
@@ -175,6 +178,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $appartement->setLandlord(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getChambre(): ?Chambre
+    {
+        return $this->chambre;
+    }
+
+    public function setChambre(?Chambre $chambre): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($chambre === null && $this->chambre !== null) {
+            $this->chambre->setTenant(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($chambre !== null && $chambre->getTenant() !== $this) {
+            $chambre->setTenant($this);
+        }
+
+        $this->chambre = $chambre;
 
         return $this;
     }

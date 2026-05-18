@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AppartementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource; // 1. AJOUTE CETTE LIGNE
@@ -28,6 +30,17 @@ class Appartement
     #[ORM\ManyToOne(inversedBy: 'appartements')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $landlord = null;
+
+    /**
+     * @var Collection<int, Chambre>
+     */
+    #[ORM\OneToMany(targetEntity: Chambre::class, mappedBy: 'appartment')]
+    private Collection $chambres;
+
+    public function __construct()
+    {
+        $this->chambres = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -78,6 +91,36 @@ class Appartement
     public function setLandlord(?User $landlord): static
     {
         $this->landlord = $landlord;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Chambre>
+     */
+    public function getChambres(): Collection
+    {
+        return $this->chambres;
+    }
+
+    public function addChambre(Chambre $chambre): static
+    {
+        if (!$this->chambres->contains($chambre)) {
+            $this->chambres->add($chambre);
+            $chambre->setAppartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChambre(Chambre $chambre): static
+    {
+        if ($this->chambres->removeElement($chambre)) {
+            // set the owning side to null (unless already changed)
+            if ($chambre->getAppartment() === $this) {
+                $chambre->setAppartment(null);
+            }
+        }
 
         return $this;
     }
