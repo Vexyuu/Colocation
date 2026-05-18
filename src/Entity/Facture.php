@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FactureRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -28,6 +30,17 @@ class Facture
     #[ORM\ManyToOne(inversedBy: 'factures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Appartement $appartment = null;
+
+    /**
+     * @var Collection<int, Quittance>
+     */
+    #[ORM\OneToMany(targetEntity: Quittance::class, mappedBy: 'billRef')]
+    private Collection $quittances;
+
+    public function __construct()
+    {
+        $this->quittances = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -78,6 +91,36 @@ class Facture
     public function setAppartment(?Appartement $appartment): static
     {
         $this->appartment = $appartment;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Quittance>
+     */
+    public function getQuittances(): Collection
+    {
+        return $this->quittances;
+    }
+
+    public function addQuittance(Quittance $quittance): static
+    {
+        if (!$this->quittances->contains($quittance)) {
+            $this->quittances->add($quittance);
+            $quittance->setBillRef($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuittance(Quittance $quittance): static
+    {
+        if ($this->quittances->removeElement($quittance)) {
+            // set the owning side to null (unless already changed)
+            if ($quittance->getBillRef() === $this) {
+                $quittance->setBillRef(null);
+            }
+        }
 
         return $this;
     }

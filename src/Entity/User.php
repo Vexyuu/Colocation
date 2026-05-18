@@ -48,9 +48,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'tenant', cascade: ['persist', 'remove'])]
     private ?Chambre $chambre = null;
 
+    /**
+     * @var Collection<int, Quittance>
+     */
+    #[ORM\OneToMany(targetEntity: Quittance::class, mappedBy: 'tenant')]
+    private Collection $quittances;
+
+    /**
+     * @var Collection<int, Chores>
+     */
+    #[ORM\OneToMany(targetEntity: Chores::class, mappedBy: 'assignedTo')]
+    private Collection $chores;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'sender')]
+    private Collection $sentMessages;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'receiver')]
+    private Collection $receivedMessage;
+
     public function __construct()
     {
         $this->appartements = new ArrayCollection();
+        $this->quittances = new ArrayCollection();
+        $this->chores = new ArrayCollection();
+        $this->sentMessages = new ArrayCollection();
+        $this->receivedMessage = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -200,6 +228,126 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->chambre = $chambre;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Quittance>
+     */
+    public function getQuittances(): Collection
+    {
+        return $this->quittances;
+    }
+
+    public function addQuittance(Quittance $quittance): static
+    {
+        if (!$this->quittances->contains($quittance)) {
+            $this->quittances->add($quittance);
+            $quittance->setTenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuittance(Quittance $quittance): static
+    {
+        if ($this->quittances->removeElement($quittance)) {
+            // set the owning side to null (unless already changed)
+            if ($quittance->getTenant() === $this) {
+                $quittance->setTenant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Chores>
+     */
+    public function getChores(): Collection
+    {
+        return $this->chores;
+    }
+
+    public function addChore(Chores $chore): static
+    {
+        if (!$this->chores->contains($chore)) {
+            $this->chores->add($chore);
+            $chore->setAssignedTo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChore(Chores $chore): static
+    {
+        if ($this->chores->removeElement($chore)) {
+            // set the owning side to null (unless already changed)
+            if ($chore->getAssignedTo() === $this) {
+                $chore->setAssignedTo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getSentMessages(): Collection
+    {
+        return $this->sentMessages;
+    }
+
+    public function addSentMessage(Message $sentMessage): static
+    {
+        if (!$this->sentMessages->contains($sentMessage)) {
+            $this->sentMessages->add($sentMessage);
+            $sentMessage->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSentMessage(Message $sentMessage): static
+    {
+        if ($this->sentMessages->removeElement($sentMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($sentMessage->getSender() === $this) {
+                $sentMessage->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getReceivedMessage(): Collection
+    {
+        return $this->receivedMessage;
+    }
+
+    public function addReceivedMessage(Message $receivedMessage): static
+    {
+        if (!$this->receivedMessage->contains($receivedMessage)) {
+            $this->receivedMessage->add($receivedMessage);
+            $receivedMessage->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceivedMessage(Message $receivedMessage): static
+    {
+        if ($this->receivedMessage->removeElement($receivedMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($receivedMessage->getReceiver() === $this) {
+                $receivedMessage->setReceiver(null);
+            }
+        }
 
         return $this;
     }

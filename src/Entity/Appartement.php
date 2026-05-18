@@ -43,10 +43,17 @@ class Appartement
     #[ORM\OneToMany(targetEntity: Facture::class, mappedBy: 'appartment')]
     private Collection $factures;
 
+    /**
+     * @var Collection<int, Chores>
+     */
+    #[ORM\OneToMany(targetEntity: Chores::class, mappedBy: 'appartment')]
+    private Collection $chores;
+
     public function __construct()
     {
         $this->chambres = new ArrayCollection();
         $this->factures = new ArrayCollection();
+        $this->chores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,6 +163,36 @@ class Appartement
             // set the owning side to null (unless already changed)
             if ($facture->getAppartment() === $this) {
                 $facture->setAppartment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Chores>
+     */
+    public function getChores(): Collection
+    {
+        return $this->chores;
+    }
+
+    public function addChore(Chores $chore): static
+    {
+        if (!$this->chores->contains($chore)) {
+            $this->chores->add($chore);
+            $chore->setAppartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChore(Chores $chore): static
+    {
+        if ($this->chores->removeElement($chore)) {
+            // set the owning side to null (unless already changed)
+            if ($chore->getAppartment() === $this) {
+                $chore->setAppartment(null);
             }
         }
 
