@@ -15,7 +15,6 @@ class AppFixtures extends Fixture
 {
     private UserPasswordHasherInterface $passwordHasher;
 
-    // On injecte le harcheur de mot de passe de Symfony
     public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
         $this->passwordHasher = $passwordHasher;
@@ -23,7 +22,7 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // 1. CRÉATION DU PROPRIÉTAIRE (Landlord)
+        //Proprio
         $landlord = new User();
         $landlord->setEmail('proprietaire@colive.fr');
         $landlord->setFirstName('Jean');
@@ -32,7 +31,7 @@ class AppFixtures extends Fixture
         $landlord->setPassword($this->passwordHasher->hashPassword($landlord, 'password'));
         $manager->persist($landlord);
 
-        // 2. CRÉATION DE L'APPARTEMENT
+        //Appart
         $appartement = new Appartement();
         $appartement->setNom('Coloc Éco-Centre');
         $appartement->setAdresse('42 Rue de la Transition, Paris');
@@ -40,7 +39,7 @@ class AppFixtures extends Fixture
         $appartement->setLandlord($landlord);
         $manager->persist($appartement);
 
-        // 3. CRÉATION DES COLOCATAIRES (Tenants) & LEURS CHAMBRES
+        //Colocs
         $donneesChambres = [
             ['nomUser' => 'Alex', 'prenomUser' => 'A', 'email' => 'alex@colive.fr', 'nomChambre' => 'Chambre A', 'surface' => 15.0],
             ['nomUser' => 'Blake', 'prenomUser' => 'B', 'email' => 'blake@colive.fr', 'nomChambre' => 'Chambre B', 'surface' => 12.0],
@@ -66,7 +65,7 @@ class AppFixtures extends Fixture
             $manager->persist($chambre);
         }
 
-        // 4. CRÉATION D'UNE FACTURE GLOBALE DE 200€ (Électricité)
+        // Facture globale d'elec
         $facture = new Facture();
         $facture->setTypeCharge('Électricité');
         $facture->setMontantTotal(200.0);
@@ -74,7 +73,7 @@ class AppFixtures extends Fixture
         $facture->setAppartement($appartement);
         $manager->persist($facture);
 
-        // On envoie le tout en base de données SQLite
+        // envoi en base de données SQLite
         $manager->flush();
     }
 }
