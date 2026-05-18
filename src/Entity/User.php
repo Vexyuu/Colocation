@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -36,6 +38,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
+
+    /**
+     * @var Collection<int, Appartement>
+     */
+    #[ORM\OneToMany(targetEntity: Appartement::class, mappedBy: 'landlord')]
+    private Collection $appartements;
+
+    public function __construct()
+    {
+        $this->appartements = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -132,6 +145,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastName(string $lastName): static
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Appartement>
+     */
+    public function getAppartements(): Collection
+    {
+        return $this->appartements;
+    }
+
+    public function addAppartement(Appartement $appartement): static
+    {
+        if (!$this->appartements->contains($appartement)) {
+            $this->appartements->add($appartement);
+            $appartement->setLandlord($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppartement(Appartement $appartement): static
+    {
+        if ($this->appartements->removeElement($appartement)) {
+            // set the owning side to null (unless already changed)
+            if ($appartement->getLandlord() === $this) {
+                $appartement->setLandlord(null);
+            }
+        }
 
         return $this;
     }
