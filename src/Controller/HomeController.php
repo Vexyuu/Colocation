@@ -40,4 +40,18 @@ class HomeController extends AbstractController
 
         return $response;
     }
+
+    #[Route('/{_locale}/legal', name: 'app_legal', requirements: ['_locale' => 'fr|en'], defaults: ['_locale' => 'fr'])]
+    public function legal(): Response
+    {
+        $response = $this->render('home/legal.html.twig');
+
+        // Green IT : Page légale statique mise en cache HTTP public pendant 1 heure (3600 secondes)
+        $response->setPublic();
+        $response->setSharedMaxAge(3600);
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+
+        return $response;
+    }
 }
+

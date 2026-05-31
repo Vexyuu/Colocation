@@ -26,4 +26,22 @@ final class HomeControllerTest extends WebTestCase
         self::assertSelectorExists('section#faq');
         self::assertSelectorExists('footer.footer');
     }
+
+    public function testLegal(): void
+    {
+        $client = static::createClient();
+        
+        // Test French legal route
+        $client->request('GET', '/fr/legal');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('h1', 'Informations Légales & RGPD');
+        self::assertSelectorExists('a[href="/fr/legal"]'); // Link in footer
+        
+        // Test English legal route
+        $client->request('GET', '/en/legal');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('h1', 'Legal Information & GDPR');
+        self::assertSelectorExists('a[href="/en/legal"]'); // Link in footer
+    }
 }
+

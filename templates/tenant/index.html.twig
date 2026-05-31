@@ -243,9 +243,15 @@
     <div class="container">
         <p>{{ 'footer.copyright'|trans }}</p>
         <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #475569;">{{ 'footer.tagline'|trans }}</p>
+        <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.85rem; font-weight: 600;">
+            <a href="{{ path('app_legal') }}" style="color: var(--color-secondary);">
+                {{ 'footer.legal_links'|trans }}
+            </a>
+        </div>
         <div class="footer-green-badge">
             🍃 {{ 'footer.green_badge'|trans }}
         </div>
     </div>
 </footer>
 {% endblock %}
+

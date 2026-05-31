@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'legal.meta_title'|trans }}{% endblock %}
+
+{% block body %}
+<!-- 1. Navigation Header -->
+<header class="navbar">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <a href="{{ path('app_home') }}" class="navbar-brand">
+            🏡 CoLive
+        </a>
+        <nav>
+            <ul class="navbar-nav">
+                <li><a href="{{ path('app_home') }}#vision">{{ 'nav.vision'|trans }}</a></li>
+                <li><a href="{{ path('app_home') }}#annonces">{{ 'nav.listings'|trans }}</a></li>
+                <li><a href="{{ path('app_home') }}#fonctionnalites">{{ 'nav.features'|trans }}</a></li>
+                <li><a href="{{ path('app_home') }}#faq">{{ 'nav.faq'|trans }}</a></li>
+            </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <!-- Language Switcher -->
+            <div style="display: flex; gap: 0.5rem; font-size: 0.85rem; font-weight: 600;">
+                <a href="{{ path('app_legal', {'_locale': 'fr'}) }}" style="color: {{ app.request.locale == 'fr' ? '#059669' : '#64748b' }}; text-decoration: none;">FR</a>
+                <span style="color: #cbd5e1;">|</span>
+                <a href="{{ path('app_legal', {'_locale': 'en'}) }}" style="color: {{ app.request.locale == 'en' ? '#059669' : '#64748b' }}; text-decoration: none;">EN</a>
+            </div>
+
+            {% if app.user %}
+                <a href="{{ path('app_login_success') }}" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">{{ 'nav.my_space'|trans }}</a>
+                <a href="{{ path('app_logout') }}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">{{ 'nav.logout'|trans }}</a>
+            {% else %}
+                <a href="{{ path('app_register') }}" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">{{ 'nav.register'|trans }}</a>
+                <a href="{{ path('app_login') }}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">{{ 'nav.login'|trans }}</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<main style="padding: 4rem 0;">
+    <div class="container" style="max-width: 900px;">
+        <!-- Header -->
+        <div class="section-header" style="margin-bottom: 3rem; text-align: left;">
+            <a href="{{ path('app_home') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-secondary); text-decoration: none; font-weight: 600; font-size: 0.95rem; margin-bottom: 1.5rem; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                ← {{ 'legal.back_home'|trans }}
+            </a>
+            <h1 style="font-size: 3rem; margin-bottom: 1rem; background: linear-gradient(135deg, #0f172a, #334155); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                {{ 'legal.main_title'|trans }}
+            </h1>
+            <p style="color: var(--color-text-secondary); font-size: 1.1rem; max-width: 100%;">
+                {{ 'legal.subtitle'|trans }}
+            </p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 2.5rem;">
+            <!-- Section 1 : Mentions Légales -->
+            <section class="feature-card" style="width: 100%; align-items: stretch; background: var(--color-bg-card); padding: 2.5rem; border-radius: 20px;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                    <span style="font-size: 1.75rem;">⚖️</span>
+                    <h2 style="font-size: 1.6rem; color: var(--color-text-primary); font-weight: 700;">
+                        {{ 'legal.mentions_title'|trans }}
+                    </h2>
+                </div>
+                
+                <div style="color: var(--color-text-secondary); font-size: 0.98rem; display: flex; flex-direction: column; gap: 1rem; line-height: 1.7;">
+                    <p><strong>{{ 'legal.mentions_editor_label'|trans }} :</strong> {{ 'legal.mentions_editor_text'|trans }}</p>
+                    <p><strong>{{ 'legal.mentions_director_label'|trans }} :</strong> Killian FIEVET, Nayiri KEBBA & Rafael GHOUAR-TOUSSAINT</p>
+                    <p><strong>{{ 'legal.mentions_host_label'|trans }} :</strong> {{ 'legal.mentions_host_text'|trans }}</p>
+                    <p><strong>{{ 'legal.mentions_contact_label'|trans }} :</strong> `contact@colive.fr` | +33 (0)1 23 45 67 89</p>
+                </div>
+            </section>
+
+            <!-- Section 2 : CGU -->
+            <section class="feature-card" style="width: 100%; align-items: stretch; background: var(--color-bg-card); padding: 2.5rem; border-radius: 20px;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                    <span style="font-size: 1.75rem;">📝</span>
+                    <h2 style="font-size: 1.6rem; color: var(--color-text-primary); font-weight: 700;">
+                        {{ 'legal.cgu_title'|trans }}
+                    </h2>
+                </div>
+                
+                <div style="color: var(--color-text-secondary); font-size: 0.98rem; display: flex; flex-direction: column; gap: 1.25rem; line-height: 1.7;">
+                    <p>{{ 'legal.cgu_intro'|trans }}</p>
+                    
+                    <h3 style="font-size: 1.15rem; color: var(--color-text-primary); font-weight: 700; margin-top: 0.5rem;">
+                        1. {{ 'legal.cgu_sec1_title'|trans }}
+                    </h3>
+                    <p>{{ 'legal.cgu_sec1_text'|trans }}</p>
+                    
+                    <h3 style="font-size: 1.15rem; color: var(--color-text-primary); font-weight: 700; margin-top: 0.5rem;">
+                        2. {{ 'legal.cgu_sec2_title'|trans }}
+                    </h3>
+                    <p>{{ 'legal.cgu_sec2_text'|trans }}</p>
+                    
+                    <h3 style="font-size: 1.15rem; color: var(--color-text-primary); font-weight: 700; margin-top: 0.5rem;">
+                        3. {{ 'legal.cgu_sec3_title'|trans }}
+                    </h3>
+                    <p>{{ 'legal.cgu_sec3_text'|trans }}</p>
+                </div>
+            </section>
+
+            <!-- Section 3 : RGPD -->
+            <section class="feature-card" style="width: 100%; align-items: stretch; background: var(--color-bg-card); padding: 2.5rem; border-radius: 20px;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                    <span style="font-size: 1.75rem;">🔒</span>
+                    <h2 style="font-size: 1.6rem; color: var(--color-text-primary); font-weight: 700;">
+                        {{ 'legal.rgpd_title'|trans }}
+                    </h2>
+                </div>
+                
+                <div style="color: var(--color-text-secondary); font-size: 0.98rem; display: flex; flex-direction: column; gap: 1.25rem; line-height: 1.7;">
+                    <p>{{ 'legal.rgpd_intro'|trans }}</p>
+                    
+                    <h3 style="font-size: 1.15rem; color: var(--color-text-primary); font-weight: 700; margin-top: 0.5rem;">
+                        1. {{ 'legal.rgpd_sec1_title'|trans }}
+                    </h3>
+                    <p>{{ 'legal.rgpd_sec1_text'|trans }}</p>
+                    
+                    <h3 style="font-size: 1.15rem; color: var(--color-text-primary); font-weight: 700; margin-top: 0.5rem;">
+                        2. {{ 'legal.rgpd_sec2_title'|trans }}
+                    </h3>
+                    <p>{{ 'legal.rgpd_sec2_text'|trans }}</p>
+                    
+                    <h3 style="font-size: 1.15rem; color: var(--color-text-primary); font-weight: 700; margin-top: 0.5rem;">
+                        3. {{ 'legal.rgpd_sec3_title'|trans }}
+                    </h3>
+                    <p>{{ 'legal.rgpd_sec3_text'|trans }}</p>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+<!-- 6. Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>{{ 'footer.copyright'|trans }}</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #475569;">{{ 'footer.tagline'|trans }}</p>
+        <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.85rem; font-weight: 600;">
+            <a href="{{ path('app_legal') }}" style="color: var(--color-secondary);">
+                {{ 'footer.legal_links'|trans }}
+            </a>
+        </div>
+        <div class="footer-green-badge">
+            🍃 {{ 'footer.green_badge'|trans }}
+        </div>
+    </div>
+</footer>
+{% endblock %}
