@@ -18,8 +18,14 @@
             </ul>
         </nav>
         <div style="display: flex; align-items: center; gap: 1rem;">
+            <!-- Theme Toggle Button -->
+            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme" style="margin-right: 0.25rem;">
+                <span class="theme-toggle-icon">🌙</span>
+            </button>
+
             <!-- Language Switcher -->
             <div style="display: flex; gap: 0.5rem; font-size: 0.85rem; font-weight: 600;">
+
                 <a href="{{ path('app_legal', {'_locale': 'fr'}) }}" style="color: {{ app.request.locale == 'fr' ? '#059669' : '#64748b' }}; text-decoration: none;">FR</a>
                 <span style="color: #cbd5e1;">|</span>
                 <a href="{{ path('app_legal', {'_locale': 'en'}) }}" style="color: {{ app.request.locale == 'en' ? '#059669' : '#64748b' }}; text-decoration: none;">EN</a>

@@ -22,7 +22,68 @@
     
     --border-glow: rgba(15, 23, 42, 0.06);
     --border-hover: rgba(2, 132, 199, 0.3);
+
+    /* Backgrounds variables for light mode */
+    --navbar-bg: rgba(255, 255, 255, 0.7);
+    --features-bg: rgba(255, 255, 255, 0.4);
+    --faq-open-bg: rgba(255, 255, 255, 0.9);
+    --footer-bg: #f1f5f9;
 }
+
+/* Dark Mode Overrides */
+.dark {
+    /* Premium Dark Palette */
+    --color-bg-darker: #0f172a; /* Slate 900 */
+    --color-bg-dark: #1e293b;   /* Slate 800 */
+    --color-bg-card: rgba(30, 41, 59, 0.8); /* Dark glassmorphism */
+    
+    --color-text-primary: #f8fafc; /* Slate 50 */
+    --color-text-secondary: #cbd5e1; /* Slate 300 */
+    --color-text-muted: #64748b; /* Slate 500 */
+    
+    --border-glow: rgba(255, 255, 255, 0.05);
+    --border-hover: rgba(2, 132, 199, 0.5);
+
+    /* Backgrounds variables overrides for dark mode */
+    --navbar-bg: rgba(15, 23, 42, 0.7);
+    --features-bg: rgba(15, 23, 42, 0.4);
+    --faq-open-bg: rgba(30, 41, 59, 0.9);
+    --footer-bg: #1e293b;
+}
+
+
+.dark body {
+    background-image: radial-gradient(circle at top right, rgba(2, 132, 199, 0.15), var(--color-bg-darker));
+}
+
+/* Theme Toggle Button Style */
+.theme-toggle-btn {
+    background: rgba(15, 23, 42, 0.05);
+    border: 1px solid var(--border-glow);
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(15, 23, 42, 0.08);
+    transform: scale(1.05);
+}
+
+.dark .theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dark .theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
 
 /* 2. Global Reset & Eco-friendly settings */
 * {
@@ -114,7 +175,8 @@ h1, h2, h3, h4 {
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border-glow);
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--navbar-bg);
+
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     position: sticky;
@@ -194,7 +256,8 @@ h1, h2, h3, h4 {
 /* 7. Features Grid */
 .features-section {
     padding: 6rem 0;
-    background: rgba(255, 255, 255, 0.4);
+    background: var(--features-bg);
+
     border-top: 1px solid var(--border-glow);
     border-bottom: 1px solid var(--border-glow);
 }
@@ -300,7 +363,8 @@ details.faq-item {
 
 details.faq-item[open] {
     border-color: var(--border-hover);
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--faq-open-bg);
+
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
 
@@ -359,7 +423,8 @@ details.faq-item[open] summary.faq-question::after {
     border-top: 1px solid var(--border-glow);
     padding: 3rem 0;
     text-align: center;
-    background: #f1f5f9;
+    background: var(--footer-bg);
+
 }
 
 .footer p {

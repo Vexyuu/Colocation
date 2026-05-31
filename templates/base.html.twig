@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app.request.locale }}">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,17 @@
         <meta property="og:description" content="{% block og_description %}Simplifiez le quotidien de votre colocation : calcul des charges au tantième, semainier des corvées et quittances automatiques.{% endblock %}">
         <meta property="og:type" content="website">
         <title>{% block title %}CoLive — Plateforme Collaborative de Colocation{% endblock %}</title>
+        
+        {# Script anti-clignotement pour le mode sombre #}
+        <script>
+            (function() {
+                const theme = localStorage.getItem('theme');
+                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                }
+            })();
+        </script>
+
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🏡</text></svg>">
         
         {# Google Fonts - Inter #}
