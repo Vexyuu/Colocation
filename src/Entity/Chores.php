@@ -43,7 +43,7 @@ class Chores
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -55,7 +55,7 @@ class Chores
         return $this->dayOfTheWeek;
     }
 
-    public function setDayOfTheWeek(string $dayOfTheWeek): static
+    public function setDayOfTheWeek(string $dayOfTheWeek): self
     {
         $this->dayOfTheWeek = $dayOfTheWeek;
 
@@ -67,7 +67,7 @@ class Chores
         return $this->choreStatus;
     }
 
-    public function setChoreStatus(ChoresStatus $choreStatus): static
+    public function setChoreStatus(ChoresStatus $choreStatus): self
     {
         $this->choreStatus = $choreStatus;
 
@@ -79,7 +79,7 @@ class Chores
         return $this->appartment;
     }
 
-    public function setAppartment(?Appartement $appartment): static
+    public function setAppartment(?Appartement $appartment): self
     {
         $this->appartment = $appartment;
 
@@ -91,7 +91,7 @@ class Chores
         return $this->assignedTo;
     }
 
-    public function setAssignedTo(?User $assignedTo): static
+    public function setAssignedTo(?User $assignedTo): self
     {
         $this->assignedTo = $assignedTo;
 

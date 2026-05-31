@@ -1,3 +1,401 @@
+/* ==========================================================================
+   CoLive Design System & Style Guide (Vanilla CSS - Premium Light & Eco-designed)
+   ========================================================================== */
+
+/* 1. Design Tokens (Variables) */
+:root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    
+    /* Premium Light Palette */
+    --color-bg-darker: #f8fafc; /* Very light slate gray */
+    --color-bg-dark: #ffffff; /* Pure white */
+    --color-bg-card: rgba(255, 255, 255, 0.75); /* White glassmorphism */
+    
+    /* Eco-friendly primary accents */
+    --color-primary: #059669; /* Emerald */
+    --color-secondary: #0284c7; /* Celestial Sky Blue */
+    --color-accent-purple: #4f46e5; /* Indigo */
+    
+    --color-text-primary: #0f172a; /* Slate 900 */
+    --color-text-secondary: #475569; /* Slate 600 */
+    --color-text-muted: #94a3b8; /* Slate 400 */
+    
+    --border-glow: rgba(15, 23, 42, 0.06);
+    --border-hover: rgba(2, 132, 199, 0.3);
+}
+
+/* 2. Global Reset & Eco-friendly settings */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+}
+
 body {
-    background-color: skyblue;
+    font-family: var(--font-sans);
+    background-color: var(--color-bg-darker);
+    background-image: radial-gradient(circle at top right, rgba(224, 242, 254, 0.6), var(--color-bg-darker));
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* 3. Base Typography */
+h1, h2, h3, h4 {
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.15;
+}
+
+/* 4. Common Layout Components */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Premium Buttons with micro-animations */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.6rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary), #047857);
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px -5px rgba(5, 150, 105, 0.35);
+}
+
+.btn-secondary {
+    background: rgba(15, 23, 42, 0.05);
+    color: var(--color-text-primary);
+    border: 1px solid var(--border-glow);
+}
+
+.btn-secondary:hover {
+    background: rgba(15, 23, 42, 0.08);
+    border-color: var(--color-secondary);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--color-secondary);
+    border: 1px solid var(--color-secondary);
+}
+
+.btn-outline:hover {
+    background: rgba(2, 132, 199, 0.06);
+    transform: translateY(-2px);
+}
+
+/* 5. Header / Navigation */
+.navbar {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-glow);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-decoration: none;
+    color: white;
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.05em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar-nav {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.navbar-nav a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.navbar-nav a:hover {
+    color: var(--color-secondary);
+}
+
+/* 6. Hero Section */
+.hero {
+    padding: 7rem 0 5rem 0;
+    text-align: center;
+    position: relative;
+}
+
+.hero h2 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #0f172a, #334155);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-highlight {
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 680px;
+    margin: 0 auto 2.5rem auto;
+    color: var(--color-text-secondary);
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+/* 7. Features Grid */
+.features-section {
+    padding: 6rem 0;
+    background: rgba(255, 255, 255, 0.4);
+    border-top: 1px solid var(--border-glow);
+    border-bottom: 1px solid var(--border-glow);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-header h3 {
+    font-size: 2.2rem;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #0f172a, #334155);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.section-header p {
+    color: var(--color-text-secondary);
+    font-size: 1.05rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card {
+    background: var(--color-bg-card);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-glow);
+    border-radius: 20px;
+    padding: 2.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--border-hover);
+    box-shadow: 0 20px 25px -5px rgba(2, 132, 199, 0.08), 0 10px 10px -5px rgba(2, 132, 199, 0.04);
+}
+
+.feature-icon {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    background: rgba(2, 132, 199, 0.08);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    color: var(--color-secondary);
+}
+
+.feature-card.primary-accent .feature-icon {
+    background: rgba(5, 150, 105, 0.08);
+    color: var(--color-primary);
+}
+
+.feature-card h4 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-text-primary);
+}
+
+.feature-card p {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* 8. FAQ CSS Accordion */
+.faq-section {
+    padding: 6rem 0;
+}
+
+.faq-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Using details/summary tag for 100% native CSS accordions */
+details.faq-item {
+    background: var(--color-bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+}
+
+details.faq-item[open] {
+    border-color: var(--border-hover);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+summary.faq-question {
+    padding: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.2s;
+    outline: none;
+    user-select: none;
+}
+
+summary.faq-question::-webkit-details-marker {
+    display: none;
+}
+
+summary.faq-question:hover {
+    color: var(--color-secondary);
+}
+
+summary.faq-question::after {
+    content: "+";
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    transition: transform 0.3s ease;
+}
+
+details.faq-item[open] summary.faq-question::after {
+    content: "−";
+    transform: rotate(180deg);
+    color: var(--color-secondary);
+}
+
+.faq-answer {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    color: var(--color-text-secondary);
+    font-size: 0.98rem;
+    line-height: 1.65;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 9. Footer */
+.footer {
+    border-top: 1px solid var(--border-glow);
+    padding: 3rem 0;
+    text-align: center;
+    background: #f1f5f9;
+}
+
+.footer p {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.footer-green-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    background: rgba(5, 150, 105, 0.08);
+    border: 1px solid rgba(5, 150, 105, 0.2);
+    border-radius: 20px;
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 1rem;
+}
+
+/* 10. Responsive tweaks */
+@media (max-width: 768px) {
+    .hero h2 {
+        font-size: 2.5rem;
+    }
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    .navbar-nav {
+        display: none; /* simple responsive header for TD scale */
+    }
 }

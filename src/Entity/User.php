@@ -39,6 +39,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $passwordResetToken = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $passwordResetTokenExpiresAt = null;
+
     /**
      * @var Collection<int, Appartement>
      */
@@ -91,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -123,7 +129,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param list<string> $roles
      */
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
@@ -138,7 +144,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -161,7 +167,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): static
+    public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
 
@@ -173,9 +179,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): static
+    public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function setPasswordResetToken(?string $passwordResetToken): self
+    {
+        $this->passwordResetToken = $passwordResetToken;
+
+        return $this;
+    }
+
+    public function getPasswordResetTokenExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->passwordResetTokenExpiresAt;
+    }
+
+    public function setPasswordResetTokenExpiresAt(?\DateTimeInterface $passwordResetTokenExpiresAt): self
+    {
+        $this->passwordResetTokenExpiresAt = $passwordResetTokenExpiresAt;
 
         return $this;
     }
@@ -188,7 +218,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->appartements;
     }
 
-    public function addAppartement(Appartement $appartement): static
+    public function addAppartement(Appartement $appartement): self
     {
         if (!$this->appartements->contains($appartement)) {
             $this->appartements->add($appartement);
@@ -198,7 +228,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeAppartement(Appartement $appartement): static
+    public function removeAppartement(Appartement $appartement): self
     {
         if ($this->appartements->removeElement($appartement)) {
             // set the owning side to null (unless already changed)
@@ -215,7 +245,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->chambre;
     }
 
-    public function setChambre(?Chambre $chambre): static
+    public function setChambre(?Chambre $chambre): self
     {
         // unset the owning side of the relation if necessary
         if ($chambre === null && $this->chambre !== null) {
@@ -240,7 +270,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->quittances;
     }
 
-    public function addQuittance(Quittance $quittance): static
+    public function addQuittance(Quittance $quittance): self
     {
         if (!$this->quittances->contains($quittance)) {
             $this->quittances->add($quittance);
@@ -250,7 +280,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeQuittance(Quittance $quittance): static
+    public function removeQuittance(Quittance $quittance): self
     {
         if ($this->quittances->removeElement($quittance)) {
             // set the owning side to null (unless already changed)
@@ -270,7 +300,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->chores;
     }
 
-    public function addChore(Chores $chore): static
+    public function addChore(Chores $chore): self
     {
         if (!$this->chores->contains($chore)) {
             $this->chores->add($chore);
@@ -280,7 +310,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeChore(Chores $chore): static
+    public function removeChore(Chores $chore): self
     {
         if ($this->chores->removeElement($chore)) {
             // set the owning side to null (unless already changed)
@@ -300,7 +330,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->sentMessages;
     }
 
-    public function addSentMessage(Message $sentMessage): static
+    public function addSentMessage(Message $sentMessage): self
     {
         if (!$this->sentMessages->contains($sentMessage)) {
             $this->sentMessages->add($sentMessage);
@@ -310,7 +340,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeSentMessage(Message $sentMessage): static
+    public function removeSentMessage(Message $sentMessage): self
     {
         if ($this->sentMessages->removeElement($sentMessage)) {
             // set the owning side to null (unless already changed)
@@ -330,7 +360,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->receivedMessage;
     }
 
-    public function addReceivedMessage(Message $receivedMessage): static
+    public function addReceivedMessage(Message $receivedMessage): self
     {
         if (!$this->receivedMessage->contains($receivedMessage)) {
             $this->receivedMessage->add($receivedMessage);
@@ -340,7 +370,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeReceivedMessage(Message $receivedMessage): static
+    public function removeReceivedMessage(Message $receivedMessage): self
     {
         if ($this->receivedMessage->removeElement($receivedMessage)) {
             // set the owning side to null (unless already changed)

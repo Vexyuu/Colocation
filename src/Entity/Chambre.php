@@ -38,7 +38,7 @@ class Chambre
         return $this->Name;
     }
 
-    public function setName(string $Name): static
+    public function setName(string $Name): self
     {
         $this->Name = $Name;
 
@@ -50,7 +50,7 @@ class Chambre
         return $this->surface;
     }
 
-    public function setSurface(float $surface): static
+    public function setSurface(float $surface): self
     {
         $this->surface = $surface;
 
@@ -62,7 +62,7 @@ class Chambre
         return $this->appartment;
     }
 
-    public function setAppartment(?Appartement $appartment): static
+    public function setAppartment(?Appartement $appartment): self
     {
         $this->appartment = $appartment;
 
@@ -74,7 +74,7 @@ class Chambre
         return $this->tenant;
     }
 
-    public function setTenant(?User $tenant): static
+    public function setTenant(?User $tenant): self
     {
         $this->tenant = $tenant;
 

@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace Propriétaire - CoLive{% endblock %}
+
+{% block body %}
+<style>
+    body {
+        margin: 0;
+        font-family: 'Inter', system-ui, sans-serif;
+        background-color: #0f172a;
+        color: #f8fafc;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 2.5rem;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: #10b981;
+    }
+    p {
+        color: #94a3b8;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+    .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background-color: #ef4444;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+    .btn:hover {
+        background-color: #dc2626;
+    }
+</style>
+
+<div class="card">
+    <h1>Espace Propriétaire 🔑</h1>
+    <p>Bienvenue {{ user.firstName }} {{ user.lastName }} ! Vous êtes connecté avec succès à votre tableau de bord de gestion de colocation.</p>
+    <a href="{{ path('app_logout') }}" class="btn">Se déconnecter</a>
+</div>
+{% endblock %}

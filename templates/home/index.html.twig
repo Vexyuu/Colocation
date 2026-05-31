@@ -1,20 +1,143 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}CoLive — Gestion Collaborative de Colocation{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<!-- 1. Navigation Header -->
+<header class="navbar">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <a href="{{ path('app_home') }}" class="navbar-brand">
+            🏡 CoLive
+        </a>
+        <nav>
+            <ul class="navbar-nav">
+                <li><a href="#vision">Vision</a></li>
+                <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+        </nav>
+        <div>
+            {% if app.user %}
+                <a href="{{ path('app_login_success') }}" class="btn btn-outline" style="margin-right: 0.5rem;">Mon Espace</a>
+                <a href="{{ path('app_logout') }}" class="btn btn-secondary">Se déconnecter</a>
+            {% else %}
+                <a href="{{ path('app_register') }}" class="btn btn-outline" style="margin-right: 0.5rem;">S'inscrire</a>
+                <a href="{{ path('app_login') }}" class="btn btn-primary">Se connecter</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<main>
+    <!-- 2. Hero Section -->
+    <section id="vision" class="hero">
+        <div class="container">
+            <h2>Simplifiez votre vie en <span class="hero-highlight">Colocation</span></h2>
+            <p>Le couteau suisse numérique d'éco-conception pour propriétaires, gestionnaires et colocataires. Propulsé par Symfony & API Platform, conçu dans le respect strict du Green IT.</p>
+            <div class="hero-actions">
+                {% if app.user %}
+                    <a href="{{ path('app_login_success') }}" class="btn btn-primary">Accéder à mon espace privé</a>
+                {% else %}
+                    <a href="{{ path('app_register') }}" class="btn btn-primary">Créer un compte colocation</a>
+                    <a href="#fonctionnalites" class="btn btn-secondary">Découvrir les fonctionnalités</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/Users/nayiri/Documents/S6/inf7/Colocation/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/Users/nayiri/Documents/S6/inf7/Colocation/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
+    <!-- 3. Features Section -->
+    <section id="fonctionnalites" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h3>Une suite d'outils ultra-légère</h3>
+                <p>Tout ce dont vous avez besoin pour maintenir l'harmonie au quotidien, sans surpoids numérique.</p>
+            </div>
+            
+            <div class="features-grid">
+                <!-- Card 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon">📐</div>
+                    <h4>Calcul des Tantièmes</h4>
+                    <p>Répartition automatique et équitable de vos factures communes (électricité, eau, internet) au prorata de l'espace occupé par chaque chambre.</p>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="feature-card primary-accent">
+                    <div class="feature-icon">🧹</div>
+                    <h4>Le Semainier des Corvées</h4>
+                    <p>Un planning visuel interactif hebdomadaire pour attribuer et valider les tâches ménagères (vaisselle, ménage, poubelles) équitablement.</p>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <h4>Finances & Quittances</h4>
+                    <p>Suivez le statut de vos loyers et téléchargez automatiquement vos quittances de loyer au format PDF dès que le paiement est validé.</p>
+                </div>
+                
+                <!-- Card 4 -->
+                <div class="feature-card primary-accent">
+                    <div class="feature-icon">💬</div>
+                    <h4>Messagerie Intégrée</h4>
+                    <p>Un fil de discussion direct et hermétiquement sécurisé entre colocataires et propriétaires pour signaler les incidents ou s'organiser.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. FAQ Section -->
+    <section id="faq" class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <h3>Foire Aux Questions</h3>
+                <p>Des réponses claires à vos questions les plus courantes.</p>
+            </div>
+            
+            <div class="faq-wrapper">
+                <details class="faq-item">
+                    <summary class="faq-question">Comment est calculé le tantième de charge ?</summary>
+                    <div class="faq-answer">
+                        Le tantième de charge représente le pourcentage qu'un colocataire doit payer sur une facture globale (ex: électricité) selon la surface de sa chambre par rapport à la superficie totale de l'appartement :
+                        <br><br>
+                        <strong>Tantième = (Surface Chambre / Surface Totale) × 100</strong>
+                        <br><br>
+                        Par exemple, pour une chambre de 15 m² dans un appartement de 100 m², le tantième est de 15%. Sur une facture d'électricité de 200 €, la part à régler sera de 30 €.
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">Qu'est-ce que l'engagement Green IT de CoLive ?</summary>
+                    <div class="faq-answer">
+                        CoLive est éco-conçu de A à Z. Nous optimisons nos requêtes SQL pour solliciter le serveur au minimum, nous n'utilisons aucun framework JavaScript lourd (pas de React ou Vue pour des tâches simples) et notre design utilise un code CSS pur ultra-léger et sur-mesure (pas de Tailwind volumineux). Le chargement des pages consomme ainsi très peu d'électricité pour le serveur et pour votre appareil !
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">Les espaces colocataires et propriétaires sont-ils hermétiques ?</summary>
+                    <div class="faq-answer">
+                        Oui, absolument. Grâce aux pare-feux et aux contrôles d'accès natifs de Symfony, les espaces sont totalement isolés. Un locataire ne peut en aucun cas accéder à la comptabilité globale d'un propriétaire, et le propriétaire accède à son espace de gestion dédié sans pouvoir perturber la messagerie privée des locataires.
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">Comment télécharger ma quittance de loyer ?</summary>
+                    <div class="faq-answer">
+                        Une fois connecté à votre Espace Locataire, vous accédez à l'historique de vos paiements. Dès que le propriétaire valide la réception de votre loyer, un bouton de téléchargement apparaît pour récupérer instantanément votre quittance de loyer officielle en format PDF.
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- 5. Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>© 2026 CoLive. Tous droits réservés.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #475569;">Conçu avec passion pour la transition numérique et l'éco-conception.</p>
+        <div class="footer-green-badge">
+            🍃 Projet Éco-conçu (Page < 50 Ko)
+        </div>
+    </div>
+</footer>
 {% endblock %}

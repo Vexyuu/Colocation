@@ -52,7 +52,7 @@ class Facture
         return $this->typeOfCharge;
     }
 
-    public function setTypeOfCharge(string $typeOfCharge): static
+    public function setTypeOfCharge(string $typeOfCharge): self
     {
         $this->typeOfCharge = $typeOfCharge;
 
@@ -64,7 +64,7 @@ class Facture
         return $this->totalAmount;
     }
 
-    public function setTotalAmount(float $totalAmount): static
+    public function setTotalAmount(float $totalAmount): self
     {
         $this->totalAmount = $totalAmount;
 
@@ -76,7 +76,7 @@ class Facture
         return $this->billDate;
     }
 
-    public function setBillDate(\DateTime $billDate): static
+    public function setBillDate(\DateTime $billDate): self
     {
         $this->billDate = $billDate;
 
@@ -88,7 +88,7 @@ class Facture
         return $this->appartment;
     }
 
-    public function setAppartment(?Appartement $appartment): static
+    public function setAppartment(?Appartement $appartment): self
     {
         $this->appartment = $appartment;
 
@@ -103,7 +103,7 @@ class Facture
         return $this->quittances;
     }
 
-    public function addQuittance(Quittance $quittance): static
+    public function addQuittance(Quittance $quittance): self
     {
         if (!$this->quittances->contains($quittance)) {
             $this->quittances->add($quittance);
@@ -113,7 +113,7 @@ class Facture
         return $this;
     }
 
-    public function removeQuittance(Quittance $quittance): static
+    public function removeQuittance(Quittance $quittance): self
     {
         if ($this->quittances->removeElement($quittance)) {
             // set the owning side to null (unless already changed)

@@ -58,19 +58,19 @@ class AppFixtures extends Fixture
 
             // Création de sa chambre liée à l'appartement et au locataire
             $chambre = new Chambre();
-            $chambre->setNom($data['nomChambre']);
-            $chambre->setSuperficie($data['surface']);
-            $chambre->setAppartement($appartement);
+            $chambre->setName($data['nomChambre']);
+            $chambre->setSurface($data['surface']);
+            $chambre->setAppartment($appartement);
             $chambre->setTenant($tenant);
             $manager->persist($chambre);
         }
 
         // Facture globale d'elec
         $facture = new Facture();
-        $facture->setTypeCharge('Électricité');
-        $facture->setMontantTotal(200.0);
-        $facture->setDateFacture(new \DateTime());
-        $facture->setAppartement($appartement);
+        $facture->setTypeOfCharge('Électricité');
+        $facture->setTotalAmount(200.0);
+        $facture->setBillDate(new \DateTime());
+        $facture->setAppartment($appartement);
         $manager->persist($facture);
 
         // envoi en base de données SQLite

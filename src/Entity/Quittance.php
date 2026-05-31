@@ -47,7 +47,7 @@ class Quittance
         return $this->rentWithoutCharges;
     }
 
-    public function setRentWithoutCharges(float $rentWithoutCharges): static
+    public function setRentWithoutCharges(float $rentWithoutCharges): self
     {
         $this->rentWithoutCharges = $rentWithoutCharges;
 
@@ -59,7 +59,7 @@ class Quittance
         return $this->rentWithChargesPercent;
     }
 
-    public function setRentWithChargesPercent(float $rentWithChargesPercent): static
+    public function setRentWithChargesPercent(float $rentWithChargesPercent): self
     {
         $this->rentWithChargesPercent = $rentWithChargesPercent;
 
@@ -71,7 +71,7 @@ class Quittance
         return $this->transmissionDate;
     }
 
-    public function setTransmissionDate(\DateTime $transmissionDate): static
+    public function setTransmissionDate(\DateTime $transmissionDate): self
     {
         $this->transmissionDate = $transmissionDate;
 
@@ -83,7 +83,7 @@ class Quittance
         return $this->paymentStatus;
     }
 
-    public function setPaymentStatus(PaymentStatus $paymentStatus): static
+    public function setPaymentStatus(PaymentStatus $paymentStatus): self
     {
         $this->paymentStatus = $paymentStatus;
 
@@ -95,7 +95,7 @@ class Quittance
         return $this->tenant;
     }
 
-    public function setTenant(?User $tenant): static
+    public function setTenant(?User $tenant): self
     {
         $this->tenant = $tenant;
 
@@ -107,7 +107,7 @@ class Quittance
         return $this->billRef;
     }
 
-    public function setBillRef(?Facture $billRef): static
+    public function setBillRef(?Facture $billRef): self
     {
         $this->billRef = $billRef;
 

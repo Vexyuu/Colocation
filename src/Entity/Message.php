@@ -40,7 +40,7 @@ class Message
         return $this->content;
     }
 
-    public function setContent(string $content): static
+    public function setContent(string $content): self
     {
         $this->content = $content;
 
@@ -52,7 +52,7 @@ class Message
         return $this->dateSent;
     }
 
-    public function setDateSent(\DateTime $dateSent): static
+    public function setDateSent(\DateTime $dateSent): self
     {
         $this->dateSent = $dateSent;
 
@@ -64,7 +64,7 @@ class Message
         return $this->sender;
     }
 
-    public function setSender(?User $sender): static
+    public function setSender(?User $sender): self
     {
         $this->sender = $sender;
 
@@ -76,7 +76,7 @@ class Message
         return $this->receiver;
     }
 
-    public function setReceiver(?User $receiver): static
+    public function setReceiver(?User $receiver): self
     {
         $this->receiver = $receiver;
 

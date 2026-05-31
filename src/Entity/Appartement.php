@@ -66,7 +66,7 @@ class Appartement
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
 
@@ -78,7 +78,7 @@ class Appartement
         return $this->adresse;
     }
 
-    public function setAdresse(string $adresse): static
+    public function setAdresse(string $adresse): self
     {
         $this->adresse = $adresse;
 
@@ -90,7 +90,7 @@ class Appartement
         return $this->superficieTotale;
     }
 
-    public function setSuperficieTotale(float $superficieTotale): static
+    public function setSuperficieTotale(float $superficieTotale): self
     {
         $this->superficieTotale = $superficieTotale;
 
@@ -102,7 +102,7 @@ class Appartement
         return $this->landlord;
     }
 
-    public function setLandlord(?User $landlord): static
+    public function setLandlord(?User $landlord): self
     {
         $this->landlord = $landlord;
 
@@ -117,7 +117,7 @@ class Appartement
         return $this->chambres;
     }
 
-    public function addChambre(Chambre $chambre): static
+    public function addChambre(Chambre $chambre): self
     {
         if (!$this->chambres->contains($chambre)) {
             $this->chambres->add($chambre);
@@ -127,7 +127,7 @@ class Appartement
         return $this;
     }
 
-    public function removeChambre(Chambre $chambre): static
+    public function removeChambre(Chambre $chambre): self
     {
         if ($this->chambres->removeElement($chambre)) {
             // set the owning side to null (unless already changed)
@@ -147,7 +147,7 @@ class Appartement
         return $this->factures;
     }
 
-    public function addFacture(Facture $facture): static
+    public function addFacture(Facture $facture): self
     {
         if (!$this->factures->contains($facture)) {
             $this->factures->add($facture);
@@ -157,7 +157,7 @@ class Appartement
         return $this;
     }
 
-    public function removeFacture(Facture $facture): static
+    public function removeFacture(Facture $facture): self
     {
         if ($this->factures->removeElement($facture)) {
             // set the owning side to null (unless already changed)
@@ -177,7 +177,7 @@ class Appartement
         return $this->chores;
     }
 
-    public function addChore(Chores $chore): static
+    public function addChore(Chores $chore): self
     {
         if (!$this->chores->contains($chore)) {
             $this->chores->add($chore);
@@ -187,7 +187,7 @@ class Appartement
         return $this;
     }
 
-    public function removeChore(Chores $chore): static
+    public function removeChore(Chores $chore): self
     {
         if ($this->chores->removeElement($chore)) {
             // set the owning side to null (unless already changed)

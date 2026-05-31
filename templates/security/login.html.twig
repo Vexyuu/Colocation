@@ -1,0 +1,201 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - CoLive{% endblock %}
+
+{% block body %}
+<style>
+    body {
+        margin: 0;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at top right, rgba(224, 242, 254, 0.6), #f8fafc);
+        color: #0f172a;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+    }
+
+    .login-container {
+        position: relative;
+        width: 100%;
+        max-width: 440px;
+        padding: 1rem;
+    }
+
+    .login-card {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(15, 23, 42, 0.06);
+        border-radius: 24px;
+        padding: 2.5rem;
+        box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.06);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .login-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 25px 50px -12px rgba(2, 132, 199, 0.12);
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .logo h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 0;
+        background: linear-gradient(135deg, #0284c7, #059669);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.05em;
+    }
+
+    .logo p {
+        color: #64748b;
+        font-size: 0.95rem;
+        margin-top: 0.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #475569;
+        margin-bottom: 0.5rem;
+        transition: color 0.2s;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        border-radius: 12px;
+        color: #0f172a;
+        font-size: 0.95rem;
+        box-sizing: border-box;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #0284c7;
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 0.85rem;
+        background: linear-gradient(135deg, #0284c7, #0369a1);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+        margin-top: 1rem;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #0ea5e9, #0284c7);
+        box-shadow: 0 10px 15px -3px rgba(2, 132, 199, 0.3);
+    }
+
+    .btn-primary:active {
+        transform: scale(0.98);
+    }
+
+    .alert {
+        padding: 0.75rem 1rem;
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        border-radius: 12px;
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    .footer-links {
+        margin-top: 1.5rem;
+        text-align: center;
+        font-size: 0.875rem;
+    }
+
+    .footer-links a {
+        color: #0284c7;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+        color: #0ea5e9;
+        text-decoration: underline;
+    }
+
+    .divider {
+        color: rgba(15, 23, 42, 0.2);
+        margin: 0 0.5rem;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        75% { transform: translateX(4px); }
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="logo">
+            <h1>CoLive 🏡</h1>
+            <p>Gestion collaborative & éco-conçue</p>
+        </div>
+
+        <form method="post">
+            {% if error %}
+                <div class="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            {% if app.user %}
+                <div class="alert" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.2); color: #a7f3d0;">
+                    Vous êtes déjà connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="inputEmail">Adresse Email</label>
+                <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control" autocomplete="email" required autofocus placeholder="exemple@colive.fr">
+            </div>
+
+            <div class="form-group">
+                <label for="inputPassword">Mot de passe</label>
+                <input type="password" name="_password" id="inputPassword" class="form-control" autocomplete="current-password" required placeholder="••••••••">
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <button class="btn-primary" type="submit">
+                Se connecter
+            </button>
+        </form>
+
+        <div class="footer-links">
+            <a href="{{ path('app_forgot_password_request') }}">Mot de passe oublié ?</a>
+            <span class="divider">|</span>
+            <a href="{{ path('app_register') }}">Créer un compte</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
