@@ -40,5 +40,5 @@ faq.a3: "Oui, absolument. Grâce aux pare-feux et aux contrôles d'accès natifs
 faq.q4: 'Comment télécharger ma quittance de loyer ?'
 faq.a4: "Une fois connecté à votre Espace Locataire, vous accédez à l'historique de vos paiements. Dès que le propriétaire valide la réception de votre loyer, un bouton de téléchargement apparaît pour récupérer instantanément votre quittance au format PDF."
 footer.copyright: '© 2026 CoLive. Tous droits réservés.'
-footer.tagline: "Développé par Killian FIEVET, Nayiri et Rafael — TD Symfony & Green IT"
+footer.tagline: "Développé par Killian FIEVET, Nayiri KEBBA et Rafael GHOUAR-TOUSSAINT — TD Symfony & Green IT"
 footer.green_badge: 'Projet Éco-conçu (Page < 50 Ko)'

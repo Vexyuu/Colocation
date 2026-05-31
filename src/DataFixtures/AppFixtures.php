@@ -7,6 +7,7 @@ use App\Entity\Appartement;
 use App\Entity\Chambre;
 use App\Entity\Facture;
 use App\Entity\Chores;
+use App\Entity\Annonce;
 use App\Enum\ChoresStatus;
 use App\Enum\PaymentStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -94,6 +95,27 @@ class AppFixtures extends Fixture
         $facture->setBillDate(new \DateTime());
         $facture->setAppartment($appartement);
         $manager->persist($facture);
+
+        // Ajout de 2 annonces (Annonces)
+        $ad1 = new Annonce();
+        $ad1->setTitle('Chambre Lumineuse - Coloc Éco-Centre');
+        $ad1->setDescription('Superbe chambre lumineuse tout confort avec lit double, grand bureau ergonomique et penderie intégrée. Située dans un appartement entièrement éco-conçu au calme. Accès rapide aux transports.');
+        $ad1->setPrice(450.0);
+        $ad1->setSurface(15.0);
+        $ad1->setPhotoFilename(null);
+        $ad1->setAppartement($appartement);
+        $ad1->setAuthor($landlord);
+        $manager->persist($ad1);
+
+        $ad2 = new Annonce();
+        $ad2->setTitle('Chambre Cosy avec accès Balcon');
+        $ad2->setDescription('Chambre chaleureuse idéale pour étudiant ou jeune actif, dotée d\'un accès direct au grand balcon ensoleillé. Mobilier complet fourni. Appartement moderne à haute efficacité énergétique.');
+        $ad2->setPrice(390.0);
+        $ad2->setSurface(12.0);
+        $ad2->setPhotoFilename(null); // Fallback dégradé CSS
+        $ad2->setAppartement($appartement);
+        $ad2->setAuthor($landlord);
+        $manager->persist($ad2);
 
         // envoi en base de données MySQL
         $manager->flush();
