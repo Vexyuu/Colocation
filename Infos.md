@@ -4,6 +4,15 @@ Ce document répertorie toutes les informations indispensables pour configurer, 
 
 ---
 
+## 📦 Installation des dépendances
+
+Avant de configurer la base de données, installez les dépendances du projet :
+```bash
+composer install
+```
+
+---
+
 ## 🔑 Comptes de Test (Fixtures)
 
 Le jeu de données fictif (fixtures) génère automatiquement **4 comptes** prêts à l'emploi (avec le mot de passe générique `password`).
