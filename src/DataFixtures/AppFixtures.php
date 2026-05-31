@@ -6,6 +6,8 @@ use App\Entity\User;
 use App\Entity\Appartement;
 use App\Entity\Chambre;
 use App\Entity\Facture;
+use App\Entity\Chores;
+use App\Enum\ChoresStatus;
 use App\Enum\PaymentStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -46,6 +48,7 @@ class AppFixtures extends Fixture
             ['nomUser' => 'Charlie', 'prenomUser' => 'C', 'email' => 'charlie@colive.fr', 'nomChambre' => 'Chambre C', 'surface' => 18.0],
         ];
 
+        $tenants = [];
         foreach ($donneesChambres as $data) {
             // Création du locataire
             $tenant = new User();
@@ -55,6 +58,7 @@ class AppFixtures extends Fixture
             $tenant->setRoles(['ROLE_TENANT']);
             $tenant->setPassword($this->passwordHasher->hashPassword($tenant, 'password'));
             $manager->persist($tenant);
+            $tenants[] = $tenant;
 
             // Création de sa chambre liée à l'appartement et au locataire
             $chambre = new Chambre();
@@ -65,6 +69,24 @@ class AppFixtures extends Fixture
             $manager->persist($chambre);
         }
 
+        // Ajout des corvées pour le Semainier des tâches ménagères
+        $taches = [
+            ['name' => 'Vaisselle & Cuisine 🍽️', 'day' => 'Lundi', 'tenant' => $tenants[0]],
+            ['name' => 'Sortir les Poubelles 🗑️', 'day' => 'Mercredi', 'tenant' => $tenants[1]],
+            ['name' => 'Nettoyer le Salon 🧹', 'day' => 'Vendredi', 'tenant' => $tenants[2]],
+            ['name' => 'Nettoyer la Salle de Bain 🛁', 'day' => 'Samedi', 'tenant' => $tenants[0]],
+        ];
+
+        foreach ($taches as $t) {
+            $chore = new Chores();
+            $chore->setName($t['name']);
+            $chore->setDayOfTheWeek($t['day']);
+            $chore->setChoreStatus(ChoresStatus::PENDING);
+            $chore->setAppartment($appartement);
+            $chore->setAssignedTo($t['tenant']);
+            $manager->persist($chore);
+        }
+
         // Facture globale d'elec
         $facture = new Facture();
         $facture->setTypeOfCharge('Électricité');
@@ -73,7 +95,7 @@ class AppFixtures extends Fixture
         $facture->setAppartment($appartement);
         $manager->persist($facture);
 
-        // envoi en base de données SQLite
+        // envoi en base de données MySQL
         $manager->flush();
     }
 }

@@ -274,7 +274,7 @@
                 <label>Vous êtes...</label>
                 <div class="role-selection">
                     {% for child in registrationForm.role %}
-                        <div class="role-card" id="role-card-{{ child.vars.value }}">
+                        <label class="role-card" for="{{ child.vars.id }}" id="role-card-{{ child.vars.value }}">
                             {{ form_widget(child) }}
                             <div class="role-icon">
                                 {% if child.vars.value == 'ROLE_TENANT' %}
@@ -284,7 +284,7 @@
                                 {% endif %}
                             </div>
                             <span class="role-title">{{ child.vars.label }}</span>
-                        </div>
+                        </label>
                     {% endfor %}
                 </div>
             </div>
@@ -326,26 +326,28 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    const initRegisterPage = () => {
         // --- 1. Role Cards Selection UI ---
         const roleCards = document.querySelectorAll('.role-card');
-        roleCards.forEach(card => {
-            const radio = card.querySelector('input[type="radio"]');
-            
-            // Initial selection state
-            if (radio && radio.checked) {
-                card.classList.add('selected');
-            }
+        const radios = document.querySelectorAll('.role-card input[type="radio"]');
 
-            card.addEventListener('click', () => {
-                // Unselect all other cards
-                roleCards.forEach(c => c.classList.remove('selected'));
-                // Select clicked card and check the radio
-                card.classList.add('selected');
-                if (radio) {
-                    radio.checked = true;
+        const updateSelectedRoleCard = () => {
+            roleCards.forEach(card => {
+                const radio = card.querySelector('input[type="radio"]');
+                if (radio && radio.checked) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
                 }
             });
+        };
+
+        // Initial state
+        updateSelectedRoleCard();
+
+        // Listen for change on radios
+        radios.forEach(radio => {
+            radio.addEventListener('change', updateSelectedRoleCard);
         });
 
         // --- 2. Password Strength Indicator ---
@@ -363,32 +365,51 @@
                 let score = 0;
 
                 if (val.length === 0) {
-                    strengthBar.style.width = '0%';
-                    strengthBar.style.backgroundColor = 'transparent';
-                    strengthText.innerText = 'Saisissez un mot de passe';
-                    strengthPercent.innerText = '0%';
-                    reqLength.style.color = '#64748b';
-                    reqLength.querySelector('.bullet').innerText = '⚪';
-                    reqChar.style.color = '#64748b';
-                    reqChar.querySelector('.bullet').innerText = '⚪';
+                    if (strengthBar) {
+                        strengthBar.style.width = '0%';
+                        strengthBar.style.backgroundColor = 'transparent';
+                    }
+                    if (strengthText) {
+                        strengthText.innerText = 'Saisissez un mot de passe';
+                        strengthText.style.color = '#64748b';
+                    }
+                    if (strengthPercent) {
+                        strengthPercent.innerText = '0%';
+                    }
+                    if (reqLength) {
+                        reqLength.style.color = '#64748b';
+                        reqLength.querySelector('.bullet').innerText = '⚪';
+                    }
+                    if (reqChar) {
+                        reqChar.style.color = '#64748b';
+                        reqChar.querySelector('.bullet').innerText = '⚪';
+                    }
                     return;
                 }
 
                 // Dynamic Requirements Checklist
                 if (val.length >= 8) {
-                    reqLength.style.color = '#059669';
-                    reqLength.querySelector('.bullet').innerText = '🟢';
+                    if (reqLength) {
+                        reqLength.style.color = '#059669';
+                        reqLength.querySelector('.bullet').innerText = '🟢';
+                    }
                 } else {
-                    reqLength.style.color = '#64748b';
-                    reqLength.querySelector('.bullet').innerText = '⚪';
+                    if (reqLength) {
+                        reqLength.style.color = '#64748b';
+                        reqLength.querySelector('.bullet').innerText = '⚪';
+                    }
                 }
 
                 if (/[0-9]/.test(val) || /[^a-zA-Z0-9]/.test(val)) {
-                    reqChar.style.color = '#059669';
-                    reqChar.querySelector('.bullet').innerText = '🟢';
+                    if (reqChar) {
+                        reqChar.style.color = '#059669';
+                        reqChar.querySelector('.bullet').innerText = '🟢';
+                    }
                 } else {
-                    reqChar.style.color = '#64748b';
-                    reqChar.querySelector('.bullet').innerText = '⚪';
+                    if (reqChar) {
+                        reqChar.style.color = '#64748b';
+                        reqChar.querySelector('.bullet').innerText = '⚪';
+                    }
                 }
 
                 // Length points
@@ -402,28 +423,44 @@
                 if (/[^a-zA-Z0-9]/.test(val)) score += 20; // Special char
 
                 // Render bar
-                strengthBar.style.width = score + '%';
-                strengthPercent.innerText = score + '%';
+                if (strengthBar) {
+                    strengthBar.style.width = score + '%';
+                }
+                if (strengthPercent) {
+                    strengthPercent.innerText = score + '%';
+                }
 
                 if (score <= 35) {
-                    strengthBar.style.backgroundColor = '#ef4444'; // Red
-                    strengthText.innerText = 'Très faible ❌';
-                    strengthText.style.color = '#ef4444';
+                    if (strengthBar) strengthBar.style.backgroundColor = '#ef4444'; // Red
+                    if (strengthText) {
+                        strengthText.innerText = 'Très faible ❌';
+                        strengthText.style.color = '#ef4444';
+                    }
                 } else if (score <= 65) {
-                    strengthBar.style.backgroundColor = '#f59e0b'; // Amber
-                    strengthText.innerText = 'Moyen ⚠️';
-                    strengthText.style.color = '#d97706';
+                    if (strengthBar) strengthBar.style.backgroundColor = '#f59e0b'; // Amber
+                    if (strengthText) {
+                        strengthText.innerText = 'Moyen ⚠️';
+                        strengthText.style.color = '#d97706';
+                    }
                 } else if (score <= 85) {
-                    strengthBar.style.backgroundColor = '#3b82f6'; // Blue
-                    strengthText.innerText = 'Fort 🛡️';
-                    strengthText.style.color = '#2563eb';
+                    if (strengthBar) strengthBar.style.backgroundColor = '#3b82f6'; // Blue
+                    if (strengthText) {
+                        strengthText.innerText = 'Fort 🛡️';
+                        strengthText.style.color = '#2563eb';
+                    }
                 } else {
-                    strengthBar.style.backgroundColor = '#10b981'; // Green
-                    strengthText.innerText = 'Très fort ! 💪';
-                    strengthText.style.color = '#059669';
+                    if (strengthBar) strengthBar.style.backgroundColor = '#10b981'; // Green
+                    if (strengthText) {
+                        strengthText.innerText = 'Très fort ! 💪';
+                        strengthText.style.color = '#059669';
+                    }
                 }
             });
         }
-    });
+    };
+
+    // Support both Turbo navigation loads and initial document loads
+    document.addEventListener('DOMContentLoaded', initRegisterPage);
+    document.addEventListener('turbo:load', initRegisterPage);
 </script>
 {% endblock %}

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Quittance de Loyer - {{ tenant.firstName }} {{ tenant.lastName }}</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #333;
+            background-color: #fff;
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.5;
+        }
+        .quittance-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 3rem;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #059669;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .header h1 {
+            color: #059669;
+            font-size: 2rem;
+            margin: 0;
+            font-weight: 800;
+        }
+        .date {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        .card h3 {
+            font-size: 1.1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            color: #111;
+        }
+        .card p {
+            margin: 0.35rem 0;
+            font-size: 0.95rem;
+            color: #444;
+        }
+        .receipt-body {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed #e5e7eb;
+        }
+        .receipt-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 1.5rem;
+            margin-top: 1rem;
+            border-top: 2px solid #e5e7eb;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #059669;
+        }
+        .footer-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 2rem;
+            margin-top: 4rem;
+        }
+        .stamp {
+            border: 3px double #059669;
+            color: #059669;
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            transform: rotate(-5deg);
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+        .actions-bar {
+            max-width: 800px;
+            margin: 1.5rem auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f3f4f6;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+        }
+        .btn-print {
+            background-color: #059669;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .btn-print:hover {
+            background-color: #047857;
+        }
+
+        /* 11. Clean HTML5 A4 Print Stylesheet */
+        @media print {
+            body {
+                padding: 0;
+            }
+            .quittance-container {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+            }
+            .actions-bar {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="actions-bar">
+    <span style="font-size: 0.9rem; color: #4b5563; font-weight: 500;">🖨️ Prêt à être imprimé ou sauvegardé sous format PDF</span>
+    <button onclick="window.print()" class="btn-print">Imprimer ou Enregistrer en PDF</button>
+</div>
+
+<div class="quittance-container">
+    <div class="header">
+        <div>
+            <h1>QUITTANCE DE LOYER</h1>
+            <div style="font-size: 0.95rem; font-weight: 600; color: #666; margin-top: 0.35rem;">CoLive Colocation</div>
+        </div>
+        <div class="date" style="text-align: right;">
+            <strong>Date d'émission :</strong> {{ quittance.transmissionDate|date('d/m/Y') }}<br>
+            <strong>Quittance N° :</strong> Q-{{ quittance.id }}-2026
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Bailleur (Propriétaire)</h3>
+            <p><strong>Nom :</strong> {{ landlord.firstName }} {{ landlord.lastName }}</p>
+            <p><strong>Email :</strong> {{ landlord.email }}</p>
+        </div>
+        
+        <div class="card">
+            <h3>Locataire</h3>
+            <p><strong>Nom :</strong> {{ tenant.firstName }} {{ tenant.lastName }}</p>
+            <p><strong>Adresse de la colocation :</strong></p>
+            <p style="padding-left: 0.5rem; font-style: italic; color: #555;">
+                {{ appartement.nom }}<br>
+                {{ appartement.adresse }}
+            </p>
+        </div>
+    </div>
+
+    <div class="receipt-body">
+        <h3 style="margin-top: 0; font-size: 1.1rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; margin-bottom: 1.25rem;">
+            Détails du paiement reçu
+        </h3>
+        
+        <div class="receipt-row">
+            <span>Loyer de base pour la chambre ({{ tenant.chambre.name }} — {{ tenant.chambre.surface }} m²)</span>
+            <strong>{{ quittance.rentWithoutCharges|number_format(2) }} €</strong>
+        </div>
+
+        <div class="receipt-row">
+            <span>Charges communes ventilées au prorata du tantième ({{ (tenant.chambre.surface / appartement.superficieTotale * 100)|number_format(2) }} %)</span>
+            <strong>{{ (quittance.rentWithChargesPercent - quittance.rentWithoutCharges)|number_format(2) }} €</strong>
+        </div>
+
+        <div class="receipt-row" style="color: #666; font-size: 0.85rem;">
+            <span>Détail de la charge globale liée</span>
+            <span>Facture : {{ quittance.billRef ? quittance.billRef.typeOfCharge : 'Charges générales' }}</span>
+        </div>
+
+        <div class="total-row">
+            <span>Montant Total Reçu (charges comprises)</span>
+            <span>{{ quittance.rentWithChargesPercent|number_format(2) }} €</span>
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+            <p style="font-size: 0.95rem; font-style: italic; max-width: 450px; color: #555;">
+                Je soussigné <strong>{{ landlord.firstName }} {{ landlord.lastName }}</strong>, propriétaire de la colocation, déclare avoir reçu la somme indiquée ci-dessus pour le paiement du loyer et des charges. Cette quittance vaut reçu complet et solde pour la période concernée.
+            </p>
+        </div>
+        <div style="text-align: center; padding-right: 2rem;">
+            <div class="stamp">Payé ✓</div>
+            <div style="margin-top: 0.75rem; font-size: 0.8rem; color: #777; font-weight: 600;">Signé numériquement</div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        Cette quittance a été générée de manière éco-responsable par la plateforme CoLive. 🍃<br>
+        Aucun document papier n'a été produit, réduisant de 95% l'empreinte carbone associée à cette quittance.
+    </div>
+</div>
+
+</body>
+</html>

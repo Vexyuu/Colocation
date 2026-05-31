@@ -1,59 +1,251 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Espace Locataire - CoLive{% endblock %}
+{% block title %}Mon Espace Colocataire — CoLive{% endblock %}
 
 {% block body %}
-<style>
-    body {
-        margin: 0;
-        font-family: 'Inter', system-ui, sans-serif;
-        background-color: #0f172a;
-        color: #f8fafc;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    .card {
-        background: rgba(30, 41, 59, 0.7);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        padding: 2.5rem;
-        max-width: 500px;
-        width: 90%;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-        text-align: center;
-    }
-    h1 {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-        color: #38bdf8;
-    }
-    p {
-        color: #94a3b8;
-        line-height: 1.6;
-        margin-bottom: 2rem;
-    }
-    .btn {
-        display: inline-block;
-        padding: 0.75rem 1.5rem;
-        background-color: #ef4444;
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: background-color 0.2s;
-    }
-    .btn:hover {
-        background-color: #dc2626;
-    }
-</style>
+<!-- Navigation Header -->
+<header class="navbar">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <a href="{{ path('app_home') }}" class="navbar-brand">
+            🏡 CoLive
+        </a>
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <span style="font-size: 0.9rem; font-weight: 600; color: var(--color-text-secondary);">
+                Colocataire : {{ user.firstName }} {{ user.lastName }} 👤
+            </span>
+            <a href="{{ path('app_logout') }}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Se déconnecter</a>
+        </div>
+    </div>
+</header>
 
-<div class="card">
-    <h1>Espace Locataire 👤</h1>
-    <p>Bienvenue {{ user.firstName }} {{ user.lastName }} ! Vous êtes connecté avec succès à votre espace privé de colocation.</p>
-    <a href="{{ path('app_logout') }}" class="btn">Se déconnecter</a>
-</div>
+<main style="padding: 3rem 0; background: #f8fafc; min-height: 100vh;">
+    <div class="container">
+        <!-- Flash Messages -->
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div style="background: {{ label == 'success' ? '#d1fae5' : (label == 'warning' ? '#fef3c7' : '#fee2e2') }};
+                            border: 1px solid {{ label == 'success' ? '#10b981' : (label == 'warning' ? '#f59e0b' : '#ef4444') }};
+                            color: {{ label == 'success' ? '#065f46' : (label == 'warning' ? '#92400e' : '#991b1b') }};
+                            padding: 1rem; border-radius: 12px; margin-bottom: 2rem; font-size: 0.95rem; font-weight: 500;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <!-- Header -->
+        <div style="margin-bottom: 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;">
+            <div>
+                <h1 style="font-size: 2.2rem; color: #0f172a; margin-bottom: 0.5rem;">Espace Locataire</h1>
+                <p style="color: #475569;">Consultez vos tantièmes, validez vos corvées et téléchargez vos quittances de loyer.</p>
+            </div>
+            
+            {% if appartement %}
+                <div style="background: #ffffff; border: 1px solid var(--border-glow); padding: 1rem 1.5rem; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
+                    <div style="font-size: 0.8rem; color: var(--color-text-muted); font-weight: 700;">MA COLOCATION</div>
+                    <div style="font-size: 1.1rem; font-weight: 800; color: var(--color-secondary);">{{ appartement.nom }}</div>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if chambre is empty %}
+            <!-- Case: No chamber assigned yet -->
+            <div style="text-align: center; padding: 4rem 2rem; background: #ffffff; border-radius: 20px; border: 1px dashed var(--border-glow);">
+                <span style="font-size: 4rem;">🔑</span>
+                <h3 style="font-size: 1.4rem; color: #0f172a; margin-top: 1.5rem;">Aucune chambre assignée</h3>
+                <p style="color: #64748b; max-width: 450px; margin: 0.5rem auto 1.5rem auto;">
+                    Vous êtes bien inscrit ! Pour accéder à vos corvées et vos factures, votre propriétaire doit vous assigner une chambre dans l'appartement de la colocation.
+                </p>
+                <div style="font-size: 0.9rem; font-weight: 600; color: var(--color-primary);">
+                    Contactez votre propriétaire à l'adresse : <span style="text-decoration: underline;">proprietaire@colive.fr</span>
+                </div>
+            </div>
+        {% else %}
+            <!-- Grid 1: Chamber Stats & Tantieme -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
+                <!-- Chamber Card -->
+                <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.01); display: flex; align-items: center; gap: 1.5rem;">
+                    <div style="background: rgba(2, 132, 199, 0.08); color: var(--color-secondary); width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+                        🛏️
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--color-text-muted); font-weight: 700;">MA CHAMBRE</div>
+                        <h4 style="font-size: 1.25rem; color: #0f172a; margin-top: 0.15rem;">{{ chambre.name }}</h4>
+                        <span style="font-size: 0.9rem; color: #64748b;">Superficie : {{ chambre.surface }} m²</span>
+                    </div>
+                </div>
+
+                <!-- Tantieme Card -->
+                <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.01); display: flex; align-items: center; gap: 1.5rem;">
+                    <div style="background: rgba(5, 150, 105, 0.08); color: var(--color-primary); width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+                        📐
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--color-text-muted); font-weight: 700;">MON TANTIÈME</div>
+                        <h4 style="font-size: 1.25rem; color: #0f172a; margin-top: 0.15rem;">{{ tantieme|number_format(2) }} %</h4>
+                        <span style="font-size: 0.9rem; color: #64748b;">(Sur {{ appartement.superficieTotale }} m² au total)</span>
+                    </div>
+                </div>
+
+                <!-- Landlord Card -->
+                <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.01); display: flex; align-items: center; gap: 1.5rem;">
+                    <div style="background: rgba(79, 70, 229, 0.08); color: var(--color-accent-purple); width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+                        🔑
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--color-text-muted); font-weight: 700;">PROPRIÉTAIRE</div>
+                        <h4 style="font-size: 1.25rem; color: #0f172a; margin-top: 0.15rem;">{{ landlord.firstName }} {{ landlord.lastName }}</h4>
+                        <span style="font-size: 0.9rem; color: #64748b;">{{ landlord.email }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. The Chores Semainier (Weekly Planning CSS Grid) -->
+            <div style="margin-bottom: 4rem;">
+                <h3 style="font-size: 1.5rem; color: #1e293b; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    🧹 Le Semainier des Corvées de la Coloc'
+                </h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+                    {% set weekdays = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] %}
+                    {% for day in weekdays %}
+                        {% set day_chore = null %}
+                        {% for chore in chores %}
+                            {% if chore.dayOfTheWeek == day %}
+                                {% set day_chore = chore %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <div style="background: #ffffff; border: 1px solid {{ day_chore and day_chore.assignedTo == user ? 'rgba(5, 150, 105, 0.3)' : 'rgba(15, 23, 42, 0.06)' }};
+                                    border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; min-height: 180px;
+                                    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+                                    background: {{ day_chore and day_chore.assignedTo == user ? '#ecfdf5' : '#ffffff' }};">
+                            <div style="font-weight: 800; font-size: 1.05rem; color: {{ day_chore and day_chore.assignedTo == user ? '#047857' : '#0f172a' }}; border-bottom: 1px solid rgba(15, 23, 42, 0.05); padding-bottom: 0.5rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+                                <span>{{ day }}</span>
+                                {% if day_chore and day_chore.assignedTo == user %}
+                                    <span style="font-size: 0.75rem; background: #059669; color: white; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">Moi</span>
+                                {% endif %}
+                            </div>
+
+                            {% if day_chore %}
+                                <div style="font-weight: 600; font-size: 0.95rem; color: #1e293b; margin-bottom: 0.5rem;">{{ day_chore.name }}</div>
+                                <div style="font-size: 0.82rem; color: #64748b; margin-bottom: auto;">
+                                    Assigné à : <strong>{{ day_chore.assignedTo == user ? 'Moi' : day_chore.assignedTo.firstName }}</strong>
+                                </div>
+                                
+                                <div style="margin-top: 1rem; display: flex; align-items: center; justify-content: space-between;">
+                                    <span style="font-size: 0.8rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 6px;
+                                                 background: {{ day_chore.choreStatus.value == 'Fait' ? '#d1fae5' : '#fee2e2' }};
+                                                 color: {{ day_chore.choreStatus.value == 'Fait' ? '#065f46' : '#991b1b' }};">
+                                        {{ day_chore.choreStatus.value }}
+                                    </span>
+
+                                    {% if day_chore.assignedTo == user and day_chore.choreStatus.value != 'Fait' %}
+                                        <a href="{{ path('app_tenant_chore_complete', {id: day_chore.id}) }}" class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; border-radius: 8px;">
+                                            Valider ✓
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <div style="color: #94a3b8; font-style: italic; font-size: 0.85rem; margin: auto 0; text-align: center;">Repos 🍃</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Grid 2: Quittances & Messaging -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem; margin-bottom: 2rem;">
+                <!-- Finances & Quittances list -->
+                <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02);">
+                    <h3 style="font-size: 1.35rem; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        📄 Mes Charges & Quittances
+                    </h3>
+
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        {% for quit in quittances %}
+                            <div style="border: 1px solid rgba(15, 23, 42, 0.06); border-radius: 14px; padding: 1.25rem; display: flex; align-items: center; justify-content: space-between; background: #ffffff;">
+                                <div>
+                                    <div style="font-weight: 700; font-size: 0.95rem; color: #1e293b;">
+                                        Facture ventilée : {{ quit.billRef ? quit.billRef.typeOfCharge : 'Loyers/Charges' }}
+                                    </div>
+                                    <div style="font-size: 0.82rem; color: #64748b; margin-top: 0.2rem;">
+                                        Date : {{ quit.transmissionDate|date('d/m/Y') }}
+                                    </div>
+                                    <div style="font-size: 1rem; font-weight: 800; color: var(--color-secondary); margin-top: 0.5rem;">
+                                        {{ quit.rentWithChargesPercent|number_format(2) }} € <span style="font-size: 0.75rem; font-weight: 500; color: #64748b;">(charges comp.)</span>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem;">
+                                    <span style="display: inline-block; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700;
+                                                 background: {{ quit.paymentStatus.value == 'Payé' ? '#ecfdf5' : '#fffbeb' }};
+                                                 color: {{ quit.paymentStatus.value == 'Payé' ? '#059669' : '#d97706' }};">
+                                        {{ quit.paymentStatus.value }}
+                                    </span>
+
+                                    {% if quit.paymentStatus.value == 'Payé' %}
+                                        <a href="{{ path('app_tenant_quittance_download', {id: quit.id}) }}" target="_blank" class="btn btn-outline" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; border-radius: 8px; border-color: var(--color-primary); color: var(--color-primary);">
+                                            Quittance PDF 📥
+                                        </a>
+                                    {% else %}
+                                        <span style="font-size: 0.75rem; color: #d97706; font-style: italic;">En attente de paiement</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <p style="font-size: 0.88rem; color: #94a3b8; font-style: italic; text-align: center; padding: 2rem 0;">Aucune quittance n'a été émise pour l'instant. Votre propriétaire vous notifiera lors de la ventilation des factures globales.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Messaging flow with quick send -->
+                <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02); display: flex; flex-direction: column;">
+                    <h3 style="font-size: 1.35rem; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        💬 Messagerie Directe avec Propriétaire
+                    </h3>
+
+                    <!-- Conversation items -->
+                    <div style="max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; padding-right: 0.5rem; margin-bottom: 1.5rem; flex-grow: 1;">
+                        {% set all_msgs = receivedMessages|merge(sentMessages) %}
+                        {% for msg in all_msgs|sort((a, b) => b.dateSent <=> a.dateSent) %}
+                            <div style="padding: 0.85rem; border-radius: 10px; border: 1px solid var(--border-glow);
+                                        background: {{ msg.sender == user ? '#f0fdf4' : '#f8fafc' }};
+                                        align-self: {{ msg.sender == user ? 'flex-end' : 'flex-start' }};
+                                        width: 85%;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.25rem;">
+                                    <strong>{{ msg.sender == user ? 'Moi' : 'Propriétaire' }}</strong>
+                                    <span>{{ msg.dateSent|date('d/m H:i') }}</span>
+                                </div>
+                                <p style="font-size: 0.85rem; color: var(--color-text-primary); line-height: 1.35;">{{ msg.content }}</p>
+                            </div>
+                        {% else %}
+                            <p style="font-size: 0.85rem; color: #94a3b8; font-style: italic; text-align: center; margin-top: 2rem;">Aucun message échangé.</p>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Send form -->
+                    <form method="post" style="border-top: 1px solid var(--border-glow); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                        <input type="hidden" name="send_message" value="1">
+                        <div>
+                            <textarea name="message_content" required rows="2" placeholder="Posez une question, signalez une panne..." style="width: 100%; padding: 0.6rem 0.85rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.88rem; resize: none;"></textarea>
+                        </div>
+                        <button class="btn btn-primary" type="submit" style="width: 100%; padding: 0.6rem; font-size: 0.88rem;">
+                            Transmettre au Propriétaire ✉
+                        </button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2026 CoLive. Tous droits réservés.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #475569;">Conçu avec passion pour la transition numérique et l'éco-conception.</p>
+        <div class="footer-green-badge">
+            🍃 Projet Éco-conçu (Page < 50 Ko)
+        </div>
+    </div>
+</footer>
 {% endblock %}

@@ -1,59 +1,305 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Espace Propriétaire - CoLive{% endblock %}
+{% block title %}Tableau de Bord Propriétaire — CoLive{% endblock %}
 
 {% block body %}
-<style>
-    body {
-        margin: 0;
-        font-family: 'Inter', system-ui, sans-serif;
-        background-color: #0f172a;
-        color: #f8fafc;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    .card {
-        background: rgba(30, 41, 59, 0.7);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        padding: 2.5rem;
-        max-width: 500px;
-        width: 90%;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-        text-align: center;
-    }
-    h1 {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-        color: #10b981;
-    }
-    p {
-        color: #94a3b8;
-        line-height: 1.6;
-        margin-bottom: 2rem;
-    }
-    .btn {
-        display: inline-block;
-        padding: 0.75rem 1.5rem;
-        background-color: #ef4444;
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: background-color 0.2s;
-    }
-    .btn:hover {
-        background-color: #dc2626;
-    }
-</style>
+<!-- Navigation Header -->
+<header class="navbar">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <a href="{{ path('app_home') }}" class="navbar-brand">
+            🏡 CoLive
+        </a>
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <span style="font-size: 0.9rem; font-weight: 600; color: var(--color-text-secondary);">
+                Bailleur : {{ user.firstName }} {{ user.lastName }} 🔑
+            </span>
+            <a href="{{ path('app_logout') }}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Se déconnecter</a>
+        </div>
+    </div>
+</header>
 
-<div class="card">
-    <h1>Espace Propriétaire 🔑</h1>
-    <p>Bienvenue {{ user.firstName }} {{ user.lastName }} ! Vous êtes connecté avec succès à votre tableau de bord de gestion de colocation.</p>
-    <a href="{{ path('app_logout') }}" class="btn">Se déconnecter</a>
-</div>
+<main style="padding: 3rem 0; background: #f8fafc; min-height: 100vh;">
+    <div class="container">
+        <!-- Flash Messages -->
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div style="background: {{ label == 'success' ? '#d1fae5' : (label == 'warning' ? '#fef3c7' : '#fee2e2') }};
+                            border: 1px solid {{ label == 'success' ? '#10b981' : (label == 'warning' ? '#f59e0b' : '#ef4444') }};
+                            color: {{ label == 'success' ? '#065f46' : (label == 'warning' ? '#92400e' : '#991b1b') }};
+                            padding: 1rem; border-radius: 12px; margin-bottom: 2rem; font-size: 0.95rem; font-weight: 500;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <!-- Header Titles -->
+        <div style="margin-bottom: 3rem;">
+            <h1 style="font-size: 2.2rem; color: #0f172a; margin-bottom: 0.5rem;">Espace Propriétaire</h1>
+            <p style="color: #475569;">Gérez vos appartements, ventilez les charges équitablement et diffusez vos annonces en toute simplicité.</p>
+        </div>
+
+        <!-- 1. Grid of Owned Apartments -->
+        <div style="margin-bottom: 4rem;">
+            <h3 style="font-size: 1.5rem; color: #1e293b; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                🏢 Mes Appartements sous gestion ({{ appartements|length }})
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                {% for appt in appartements %}
+                    <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02);">
+                        <h4 style="font-size: 1.3rem; color: #0f172a; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                            <span>{{ appt.nom }}</span>
+                            <span style="font-size: 0.85rem; background: #f1f5f9; color: #475569; padding: 0.25rem 0.50rem; border-radius: 6px;">{{ appt.superficieTotale }} m²</span>
+                        </h4>
+                        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 1.5rem;">📍 {{ appt.adresse }}</p>
+
+                        <!-- Locataires block -->
+                        <h5 style="font-size: 0.95rem; color: #334155; margin-bottom: 0.75rem; font-weight: 700; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.5rem;">
+                            👤 Locataires & Chambres
+                        </h5>
+                        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+                            {% for chambre in appt.chambres %}
+                                <li style="display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem;">
+                                    <span style="font-weight: 500; color: #0f172a;">{{ chambre.name }} ({{ chambre.surface }} m²)</span>
+                                    {% if chambre.tenant %}
+                                        <span style="color: #059669; font-weight: 600; background: #ecfdf5; padding: 0.15rem 0.4rem; border-radius: 6px;">
+                                            Occupé par {{ chambre.tenant.firstName }} {{ chambre.tenant.lastName }}
+                                        </span>
+                                    {% else %}
+                                        <span style="color: #94a3b8; font-style: italic;">Chambre vacante</span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+
+                        <!-- Invoices block -->
+                        <h5 style="font-size: 0.95rem; color: #334155; margin-bottom: 0.75rem; font-weight: 700; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.5rem;">
+                            ⚡ Factures globales à ventiler
+                        </h5>
+                        {% set pending_bills = false %}
+                        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
+                            {% for bill in appt.factures %}
+                                {% if bill.quittances is empty %}
+                                    {% set pending_bills = true %}
+                                    <li style="display: flex; align-items: center; justify-content: space-between; font-size: 0.88rem; background: #fffbeb; border: 1px solid #fef3c7; padding: 0.75rem; border-radius: 10px;">
+                                        <div>
+                                            <span style="font-weight: 600; color: #b45309;">{{ bill.typeOfCharge }}</span>
+                                            <span style="color: #64748b;">— {{ bill.totalAmount }} €</span>
+                                        </div>
+                                        <a href="{{ path('app_landlord_facture_ventilate', {id: bill.id}) }}" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.78rem; border-radius: 8px;">
+                                            Ventiler les charges 📐
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li style="display: flex; align-items: center; justify-content: space-between; font-size: 0.88rem; color: #64748b; padding: 0.5rem 0.75rem;">
+                                        <span>{{ bill.typeOfCharge }} — {{ bill.totalAmount }} €</span>
+                                        <span style="color: #059669; font-weight: 600; font-size: 0.8rem;">Ventilée ✓</span>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                <li style="font-size: 0.85rem; color: #94a3b8; font-style: italic;">Aucune facture déclarée.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 2. Financial Management & Quittances -->
+        <div style="margin-bottom: 4rem;">
+            <h3 style="font-size: 1.5rem; color: #1e293b; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                📄 Historique des Quittances Générées
+            </h3>
+            
+            <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02); overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; min-width: 600px; text-align: left;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #f1f5f9; font-size: 0.9rem; color: #475569; font-weight: 700;">
+                            <th style="padding: 1rem 0.5rem;">Locataire</th>
+                            <th style="padding: 1rem 0.5rem;">Colocation</th>
+                            <th style="padding: 1rem 0.5rem;">Facture Ref</th>
+                            <th style="padding: 1rem 0.5rem;">Loyer Base</th>
+                            <th style="padding: 1rem 0.5rem;">Total CC (Charges comp.)</th>
+                            <th style="padding: 1rem 0.5rem;">Date émission</th>
+                            <th style="padding: 1rem 0.5rem;">Statut de paiement</th>
+                            <th style="padding: 1rem 0.5rem; text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-size: 0.9rem; color: #334155;">
+                        {% for quit in quittances %}
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 1rem 0.5rem; font-weight: 600;">{{ quit.tenant.firstName }} {{ quit.tenant.lastName }}</td>
+                                <td style="padding: 1rem 0.5rem;">{{ quit.tenant.chambre.appartment.nom }}</td>
+                                <td style="padding: 1rem 0.5rem; color: #64748b;">{{ quit.billRef ? quit.billRef.typeOfCharge : 'N/A' }}</td>
+                                <td style="padding: 1rem 0.5rem;">{{ quit.rentWithoutCharges }} €</td>
+                                <td style="padding: 1rem 0.5rem; font-weight: 600; color: #0284c7;">{{ quit.rentWithChargesPercent|number_format(2) }} €</td>
+                                <td style="padding: 1rem 0.5rem; color: #64748b;">{{ quit.transmissionDate|date('d/m/Y') }}</td>
+                                <td style="padding: 1rem 0.5rem;">
+                                    <span style="display: inline-block; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700;
+                                                 background: {{ quit.paymentStatus.value == 'Payé' ? '#ecfdf5' : '#fffbeb' }};
+                                                 color: {{ quit.paymentStatus.value == 'Payé' ? '#059669' : '#d97706' }};">
+                                        {{ quit.paymentStatus.value }}
+                                    </span>
+                                </td>
+                                <td style="padding: 1rem 0.5rem; text-align: right;">
+                                    {% if quit.paymentStatus.value != 'Payé' %}
+                                        <a href="{{ path('app_landlord_quittance_pay', {id: quit.id}) }}" class="btn btn-outline" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; border-radius: 8px;">
+                                            Valider Paiement ✓
+                                        </a>
+                                    {% else %}
+                                        <span style="color: #94a3b8; font-style: italic; font-size: 0.85rem;">Prêt au téléchargement</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="8" style="padding: 2rem; text-align: center; color: #94a3b8; font-style: italic;">Aucune quittance n'a encore été générée. Ajoutez une facture et ventilez-la !</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. Twin Forms (Listing Ad & Invoice addition) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem; margin-bottom: 4rem;">
+            <!-- Annonce Form -->
+            <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02);">
+                <h3 style="font-size: 1.35rem; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    📢 Publier une Annonce de Chambre (avec Photo)
+                </h3>
+                
+                {{ form_start(annonceForm) }}
+                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                        <div>
+                            {{ form_label(annonceForm.title) }}
+                            {{ form_widget(annonceForm.title, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                        </div>
+                        <div>
+                            {{ form_label(annonceForm.description) }}
+                            {{ form_widget(annonceForm.description, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                {{ form_label(annonceForm.price) }}
+                                {{ form_widget(annonceForm.price, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                            </div>
+                            <div>
+                                {{ form_label(annonceForm.surface) }}
+                                {{ form_widget(annonceForm.surface, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                            </div>
+                        </div>
+                        <div>
+                            {{ form_label(annonceForm.appartement) }}
+                            {{ form_widget(annonceForm.appartement, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                        </div>
+                        <div>
+                            {{ form_label(annonceForm.photoFile) }}
+                            {{ form_widget(annonceForm.photoFile, {attr: {style: 'margin-top: 0.5rem; display: block;'}}) }}
+                        </div>
+                        <button class="btn btn-primary" type="submit" style="width: 100%; margin-top: 1rem;">
+                            Publier l'annonce
+                        </button>
+                    </div>
+                {{ form_end(annonceForm) }}
+            </div>
+
+            <!-- Facture Form -->
+            <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02); height: max-content;">
+                <h3 style="font-size: 1.35rem; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    🔌 Déclarer une nouvelle Facture globale
+                </h3>
+                
+                {{ form_start(factureForm) }}
+                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                        <div>
+                            {{ form_label(factureForm.typeOfCharge) }}
+                            {{ form_widget(factureForm.typeOfCharge, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                        </div>
+                        <div>
+                            {{ form_label(factureForm.totalAmount) }}
+                            {{ form_widget(factureForm.totalAmount, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                        </div>
+                        <div>
+                            {{ form_label(factureForm.billDate) }}
+                            {{ form_widget(factureForm.billDate, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                        </div>
+                        <div>
+                            {{ form_label(factureForm.appartment) }}
+                            {{ form_widget(factureForm.appartment, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                        </div>
+                        <button class="btn btn-primary" type="submit" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, var(--color-secondary), #0369a1); box-shadow: 0 10px 15px -3px rgba(2, 132, 199, 0.2);">
+                            Ajouter la facture
+                        </button>
+                    </div>
+                {{ form_end(factureForm) }}
+            </div>
+        </div>
+
+        <!-- 4. Landlord Messaging Interface -->
+        <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02); margin-bottom: 2rem;">
+            <h3 style="font-size: 1.5rem; color: #1e293b; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                💬 Fil de Messagerie Hermétique
+            </h3>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem;">
+                <!-- Conversation flow -->
+                <div>
+                    <h4 style="font-size: 1.05rem; color: #475569; margin-bottom: 1rem;">Messages Reçus & Envoyés</h4>
+                    <div style="max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding-right: 0.5rem;">
+                        {% set all_msgs = receivedMessages|merge(sentMessages) %}
+                        {% for msg in all_msgs|sort((a, b) => b.dateSent <=> a.dateSent) %}
+                            <div style="padding: 1rem; border-radius: 12px; border: 1px solid var(--border-glow);
+                                        background: {{ msg.sender == user ? '#f0fdf4' : '#f8fafc' }};
+                                        align-self: {{ msg.sender == user ? 'flex-end' : 'flex-start' }};
+                                        width: 85%;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--color-text-muted); margin-bottom: 0.35rem;">
+                                    <strong>{{ msg.sender == user ? 'Moi' : msg.sender.firstName ~ ' ' ~ msg.sender.lastName }}</strong>
+                                    <span>{{ msg.dateSent|date('d/m H:i') }}</span>
+                                </div>
+                                <p style="font-size: 0.88rem; color: var(--color-text-primary); line-height: 1.4;">{{ msg.content }}</p>
+                            </div>
+                        {% else %}
+                            <p style="font-size: 0.88rem; color: #94a3b8; font-style: italic; text-align: center; margin-top: 2rem;">Aucun message échangé.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Send Message Block -->
+                <div style="border-left: 1px solid var(--border-glow); padding-left: 2rem;">
+                    <h4 style="font-size: 1.05rem; color: #475569; margin-bottom: 1rem;">Contacter un Locataire</h4>
+                    <form method="post" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <input type="hidden" name="send_message" value="1">
+                        <div>
+                            <label style="font-size: 0.85rem; font-weight: 600; color: #475569;">Sélectionner le locataire</label>
+                            <select name="receiver_id" required style="width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;">
+                                <option value="">-- Choisir un colocataire --</option>
+                                {% for loc in locataires %}
+                                    <option value="{{ loc.id }}">{{ loc.firstName }} {{ loc.lastName }} ({{ loc.chambre.appartment.nom }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; font-weight: 600; color: #475569;">Votre message</label>
+                            <textarea name="message_content" required rows="4" placeholder="Tapez votre message ici..." style="width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem; resize: none;"></textarea>
+                        </div>
+                        <button class="btn btn-outline" type="submit" style="width: 100%; border-color: var(--color-primary); color: var(--color-primary); font-weight: 600;">
+                            Envoyer le message ✉️
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2026 CoLive. Tous droits réservés.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #475569;">Conçu avec passion pour la transition numérique et l'éco-conception.</p>
+        <div class="footer-green-badge">
+            🍃 Projet Éco-conçu (Page < 50 Ko)
+        </div>
+    </div>
+</footer>
 {% endblock %}
