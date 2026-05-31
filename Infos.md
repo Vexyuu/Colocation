@@ -1,21 +1,49 @@
 # 🏡 CoLive — Guide & Informations de Référence
 
-Ce document répertorie toutes les informations indispensables pour configurer, exécuter et tester la plateforme **CoLive** localement.
+Ce document répertorie toutes les étapes et informations indispensables pour installer, configurer, exécuter et tester la plateforme **CoLive** localement.
 
 ---
 
-## 📦 Installation des dépendances
+## 🛠️ Guide d'Installation Étape par Étape
 
-Avant de configurer la base de données, installez les dépendances du projet :
+### 1. 📦 Installation des dépendances
+Avant tout, commencez par installer les dépendances PHP requises par le projet :
 ```bash
 composer install
 ```
 
+### 2. 💾 Configuration de la Base de Données (MySQL / WampServer)
+Exécutez les commandes suivantes dans l'ordre pour initialiser et configurer proprement votre base de données locale.
+
+#### A. Création de la base de données
+```bash
+symfony php bin/console doctrine:database:create
+```
+
+#### B. Application des migrations (Schéma de table)
+```bash
+symfony php bin/console doctrine:migrations:migrate --no-interaction
+```
+
+#### C. Chargement du jeu de données initial (Fixtures)
+> [!IMPORTANT]
+> Cette commande purge la base de données existante et charge le jeu d'essai complet (propriétaire, locataires, appartement, chambres, factures et corvées hebdomadaires).
+```bash
+symfony php bin/console doctrine:fixtures:load --no-interaction
+```
+
+### 3. 🚀 Lancement du Serveur de Développement
+Pour lancer le serveur web local de développement et accéder à l'application :
+```bash
+symfony server:start
+```
+L'application est ensuite accessible sur votre navigateur à l'adresse locale indiquée par la console (généralement `http://127.0.0.1:8000`).
+
 ---
 
-## 🔑 Comptes de Test (Fixtures)
+## 🔑 Comptes de Test (Jeu de Données)
 
-Le jeu de données fictif (fixtures) génère automatiquement **4 comptes** prêts à l'emploi (avec le mot de passe générique `password`).
+Le jeu de données (Fixtures) génère automatiquement **4 comptes** prêts à l'emploi (avec le mot de passe générique `password`).
 
 | Rôle / Type | Prénom & Nom | Adresse Email | Mot de passe | Tantième |
 | :--- | :--- | :--- | :--- | :--- |
@@ -26,35 +54,12 @@ Le jeu de données fictif (fixtures) génère automatiquement **4 comptes** prê
 
 ---
 
-## 💾 Commandes pour la BDD MySQL (WampServer)
-
-Exécutez ces commandes dans l'ordre pour réinitialiser et configurer proprement votre base de données locale.
-
-### 1. Création de la BDD
-```bash
-symfony php bin/console doctrine:database:create
-```
-
-### 2. Application des migrations (Schéma de table)
-```bash
-symfony php bin/console doctrine:migrations:migrate --no-interaction
-```
-
-### 3. Chargement des données de test (Fixtures)
-> [!IMPORTANT]
-> Cette commande purge la base de données existante et charge le jeu d'essai ci-dessus (1 propriétaire, 3 locataires, 1 appartement, chambres, factures et tâches hebdomadaires).
-```bash
-symfony php bin/console doctrine:fixtures:load --no-interaction
-```
-
----
-
 ## 🌐 Système de Traduction (Internationalisation i18n)
 
-CoLive est bilingue (Français/Anglais). Utilisez les commandes suivantes pour gérer les fichiers de traduction.
+CoLive est entièrement bilingue (Français/Anglais). Utilisez les commandes suivantes pour gérer et mettre à jour les fichiers de traduction.
 
 ### Extraction automatique des nouvelles clés
-Analyse les templates Twig pour identifier les filtres `|trans` et met à jour les fichiers de dictionnaires YAML sans supprimer les traductions existantes.
+Analyse les templates Twig pour identifier les filtres `|trans` et met à jour les fichiers de dictionnaires YAML sans écraser vos traductions existantes.
 ```bash
 # Pour le français
 symfony php bin/console translation:extract fr --force --format=yaml
@@ -83,7 +88,12 @@ Pour lancer la suite de tests unitaires et fonctionnels (contrôle des tantième
 symfony php bin/console doctrine:migrations:migrate --env=test --no-interaction
 ```
 
-### 2. Lancer la suite de tests
+### 2. Charger les données de test dans l'environnement de test
+```bash
+symfony php bin/console doctrine:fixtures:load --env=test --no-interaction
+```
+
+### 3. Lancer la suite de tests
 ```bash
 symfony php vendor/bin/phpunit
 ```
@@ -91,7 +101,7 @@ symfony php vendor/bin/phpunit
 ---
 
 ## 🍃 Optimisations Éco-conception (Green IT)
-- **Zéro JS lourd** : Le planning (Semainier) utilise une grille CSS native.
+- **Zéro JS lourd** : Le planning (Semainier) utilise une grille CSS native ultra-légère.
 - **Cache HTTP** : Activé pour 60 secondes sur la page d'accueil pour soulager le serveur.
 - **Requêtes optimisées** : Jointures Doctrine SQL explicites pour éradiquer les requêtes N+1.
 - **Impression Éco-PDF** : Utilise les CSS `@media print` pour les quittances, évitant le recours à une lourde bibliothèque PHP.
