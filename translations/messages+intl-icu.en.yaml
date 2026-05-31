@@ -40,5 +40,5 @@ faq.a3: "Yes, absolutely. Using Symfony's native firewalls and role-based access
 faq.q4: "How do I download my rent receipt?"
 faq.a4: "Once logged into your Tenant Space, you access your payment history. As soon as the landlord validates receipt of your rent, a download button appears to instantly retrieve your receipt in a print-ready layout."
 footer.copyright: "© 2026 CoLive. All rights reserved."
-footer.tagline: "Designed with passion for digital transition and eco-design."
+footer.tagline: "Developed  by Killian, Rafael and Nayiri — Symfony & Green IT Course"
 footer.green_badge: "Eco-designed Project (Page < 50 KB)"

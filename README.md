@@ -247,4 +247,13 @@ erDiagram
 
 ---
 
+## 👥 Auteurs du Projet
+
+Ce projet a été développé dans le cadre du TD Symfony & Green IT par :
+*   **Killian FIEVET**
+*   **Nayiri KEBBA**
+*   **Rafael GHOUAR-TOUSSAINT**
+
+---
+
 > Proposé avec passion pour le projet **CoLive**. Convivial, Performant, Éco-conçu. 🍃
