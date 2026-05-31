@@ -303,6 +303,16 @@
                         <span id="strength-percent">0%</span>
                     </div>
                 </div>
+
+                {# Exigences de sécurité du mot de passe #}
+                <div class="password-requirements" style="margin-top: 0.75rem; font-size: 0.8rem; color: #64748b;">
+                    <div id="req-length" style="display: flex; align-items: center; gap: 0.35rem; transition: color 0.2s;">
+                        <span class="bullet" style="font-size: 0.65rem;">⚪</span> Minimum 8 caractères
+                    </div>
+                    <div id="req-char" style="display: flex; align-items: center; gap: 0.35rem; transition: color 0.2s; margin-top: 0.25rem;">
+                        <span class="bullet" style="font-size: 0.65rem;">⚪</span> Au moins un chiffre ou caractère spécial
+                    </div>
+                </div>
             </div>
 
             <button type="submit" class="btn-primary">Créer mon compte</button>
@@ -345,6 +355,9 @@
         const strengthPercent = document.getElementById('strength-percent');
 
         if (passwordInput) {
+            const reqLength = document.getElementById('req-length');
+            const reqChar = document.getElementById('req-char');
+
             passwordInput.addEventListener('input', () => {
                 const val = passwordInput.value;
                 let score = 0;
@@ -354,7 +367,28 @@
                     strengthBar.style.backgroundColor = 'transparent';
                     strengthText.innerText = 'Saisissez un mot de passe';
                     strengthPercent.innerText = '0%';
+                    reqLength.style.color = '#64748b';
+                    reqLength.querySelector('.bullet').innerText = '⚪';
+                    reqChar.style.color = '#64748b';
+                    reqChar.querySelector('.bullet').innerText = '⚪';
                     return;
+                }
+
+                // Dynamic Requirements Checklist
+                if (val.length >= 8) {
+                    reqLength.style.color = '#059669';
+                    reqLength.querySelector('.bullet').innerText = '🟢';
+                } else {
+                    reqLength.style.color = '#64748b';
+                    reqLength.querySelector('.bullet').innerText = '⚪';
+                }
+
+                if (/[0-9]/.test(val) || /[^a-zA-Z0-9]/.test(val)) {
+                    reqChar.style.color = '#059669';
+                    reqChar.querySelector('.bullet').innerText = '🟢';
+                } else {
+                    reqChar.style.color = '#64748b';
+                    reqChar.querySelector('.bullet').innerText = '⚪';
                 }
 
                 // Length points
@@ -374,19 +408,19 @@
                 if (score <= 35) {
                     strengthBar.style.backgroundColor = '#ef4444'; // Red
                     strengthText.innerText = 'Très faible ❌';
-                    strengthText.style.color = '#fca5a5';
+                    strengthText.style.color = '#ef4444';
                 } else if (score <= 65) {
                     strengthBar.style.backgroundColor = '#f59e0b'; // Amber
                     strengthText.innerText = 'Moyen ⚠️';
-                    strengthText.style.color = '#fde047';
+                    strengthText.style.color = '#d97706';
                 } else if (score <= 85) {
                     strengthBar.style.backgroundColor = '#3b82f6'; // Blue
                     strengthText.innerText = 'Fort 🛡️';
-                    strengthText.style.color = '#93c5fd';
+                    strengthText.style.color = '#2563eb';
                 } else {
                     strengthBar.style.backgroundColor = '#10b981'; // Green
                     strengthText.innerText = 'Très fort ! 💪';
-                    strengthText.style.color = '#a7f3d0';
+                    strengthText.style.color = '#059669';
                 }
             });
         }

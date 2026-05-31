@@ -163,6 +163,25 @@
             <p>Gestion collaborative & éco-conçue</p>
         </div>
 
+        {# Rendu des messages flash (ex: lien de réinitialisation simulé) #}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}" style="
+                    background: {{ label == 'success' ? 'rgba(16, 185, 129, 0.08)' : (label == 'info' ? 'rgba(2, 132, 199, 0.08)' : 'rgba(239, 68, 68, 0.08)') }};
+                    border: 1px solid {{ label == 'success' ? 'rgba(16, 185, 129, 0.15)' : (label == 'info' ? 'rgba(2, 132, 199, 0.15)' : 'rgba(239, 68, 68, 0.15)') }};
+                    color: {{ label == 'success' ? '#059669' : (label == 'info' ? '#0284c7' : '#ef4444') }};
+                    padding: 0.75rem 1rem;
+                    border-radius: 12px;
+                    font-size: 0.875rem;
+                    margin-bottom: 1.5rem;
+                    line-height: 1.4;
+                    word-break: break-all;
+                ">
+                    {{ message|raw }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
         <form method="post">
             {% if error %}
                 <div class="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>

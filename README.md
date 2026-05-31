@@ -208,32 +208,35 @@ erDiagram
 
 ### Installation
 1.  **Cloner le projet :**
-    ```bash
-    git clone https://github.com/votre-compte/colocation.git
-    cd colocation
-    ```
+     ```bash
+     git clone https://github.com/votre-compte/colocation.git
+     cd colocation
+     ```
 2.  **Installer les dépendances PHP :**
-    ```bash
-    composer install
-    ```
+     ```bash
+     composer install
+     ```
 3.  **Configurer l'environnement :**
-    Copier le fichier `.env` en `.env.local` et ajuster la ligne de connexion à la base de données :
-    ```env
-    DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/colocation?serverVersion=16&charset=utf8"
-    ```
-4.  **Créer la base de données et appliquer les migrations :**
-    ```bash
-    php bin/console doctrine:database:create
-    php bin/console doctrine:migrations:migrate --no-interaction
-    ```
-5.  **Lancer les tests unitaires et d'intégration :**
-    ```bash
-    php bin/phpunit
-    ```
+     Copier le fichier `.env` en `.env.local` et ajuster la ligne de connexion à la base de données pour correspondre à votre configuration MySQL (ex: WampServer) :
+     ```env
+     DATABASE_URL="mysql://root:@127.0.0.1:3306/colocation?serverVersion=8.2.0&charset=utf8mb4"
+     ```
+4.  **Initialiser la base de données et charger les données de test :**
+     ```bash
+     symfony php bin/console doctrine:database:create
+     symfony php bin/console doctrine:migrations:migrate --no-interaction
+     symfony php bin/console doctrine:fixtures:load --no-interaction
+     ```
+5.  **Initialiser la base de test et lancer les tests unitaires :**
+     ```bash
+     symfony php bin/console doctrine:database:create --env=test
+     symfony php bin/console doctrine:migrations:migrate --no-interaction --env=test
+     symfony php bin/phpunit
+     ```
 6.  **Lancer le serveur de développement :**
-    ```bash
-    symfony server:start
-    ```
+     ```bash
+     symfony server:start
+     ```
 
 ---
 

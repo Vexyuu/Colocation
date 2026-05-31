@@ -65,9 +65,13 @@ class ResetPasswordController extends AbstractController
                     $mailer->send($email);
                     $this->addFlash('success', 'Un email de réinitialisation a été envoyé à votre adresse.');
                 } catch (\Exception $e) {
-                    // Fallback in development/test: display link in a flash message to ease manual testing
+                    // Fallback if mailer fails entirely
                     $this->addFlash('success', 'Un email de réinitialisation a été configuré.');
-                    $this->addFlash('info', 'Lien de réinitialisation (Simulé) : ' . $resetUrl);
+                }
+
+                // Pour faciliter les tests en local (dev), on affiche directement le lien à l'écran
+                if ($this->getParameter('kernel.environment') === 'dev') {
+                    $this->addFlash('info', 'Lien de réinitialisation (Simulé pour dev) : <a href="' . $resetUrl . '" style="color: #0284c7; text-decoration: underline; font-weight: 600;">Cliquer ici pour réinitialiser</a>');
                 }
             } else {
                 // Avoid leaking user existence, display same success message
