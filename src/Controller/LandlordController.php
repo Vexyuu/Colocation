@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Annonce;
+use App\Entity\Appartement;
 use App\Entity\Facture;
 use App\Entity\Message;
 use App\Entity\Quittance;
 use App\Entity\User;
 use App\Enum\PaymentStatus;
 use App\Form\AnnonceType;
+use App\Form\AppartementType;
 use App\Form\FactureType;
 use App\Repository\AnnonceRepository;
 use App\Repository\FactureRepository;
@@ -132,6 +134,23 @@ class LandlordController extends AbstractController
             return $this->redirectToRoute('app_landlord_dashboard');
         }
 
+        // 5b. Formulaire de création d'appartement (NEW & DYNAMIC)
+        $appartementNew = new Appartement();
+        $appartementForm = $this->createForm(AppartementType::class, $appartementNew);
+        $appartementForm->handleRequest($request);
+
+        if ($appartementForm->isSubmitted() && $appartementForm->isValid()) {
+            $appartementNew->setLandlord($landlord);
+            $entityManager->persist($appartementNew);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Le nouvel appartement a été ajouté avec succès !');
+            return $this->redirectToRoute('app_landlord_dashboard');
+        }
+
+        // 5c. Charger les annonces publiées par ce bailleur (NEW & DYNAMIC)
+        $landlordAnnonces = $annonceRepository->findBy(['author' => $landlord], ['createdAt' => 'DESC']);
+
         // 6. Gestion des messages (Messagerie direct)
         $sentMessages = $entityManager->getRepository(Message::class)->findBy(['sender' => $landlord], ['dateSent' => 'DESC']);
         $receivedMessages = $entityManager->getRepository(Message::class)->findBy(['receiver' => $landlord], ['dateSent' => 'DESC']);
@@ -164,6 +183,8 @@ class LandlordController extends AbstractController
             'quittances' => $quittances,
             'annonceForm' => $annonceForm->createView(),
             'factureForm' => $factureForm->createView(),
+            'appartementForm' => $appartementForm->createView(),
+            'landlordAnnonces' => $landlordAnnonces,
             'sentMessages' => $sentMessages,
             'receivedMessages' => $receivedMessages,
         ]);

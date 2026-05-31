@@ -151,22 +151,57 @@
                                     {% endif %}
                                 </td>
                             </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="8" style="padding: 2rem; text-align: center; color: #94a3b8; font-style: italic;">Aucune quittance n'a encore été générée. Ajoutez une facture et ventilez-la !</td>
-                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 3. Twin Forms (Listing Ad & Invoice addition) -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem; margin-bottom: 4rem;">
+        <!-- Mes Annonces Publiées -->
+        <div style="margin-bottom: 4rem;">
+            <h3 style="font-size: 1.5rem; color: #1e293b; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                📢 Mes Annonces Publiées ({{ landlordAnnonces|length }})
+            </h3>
+            
+            {% if landlordAnnonces is empty %}
+                <p style="font-size: 0.9rem; color: #94a3b8; font-style: italic; background: #ffffff; padding: 2rem; border-radius: 18px; border: 1px solid rgba(15, 23, 42, 0.06); text-align: center;">
+                    Vous n'avez pas encore publié d'annonces. Utilisez le formulaire ci-dessous pour publier votre première annonce avec photo !
+                </p>
+            {% else %}
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                    {% for ad in landlordAnnonces %}
+                        <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
+                            {% if ad.photoFilename %}
+                                <img src="{{ asset('uploads/photos/' ~ ad.photoFilename) }}" alt="{{ ad.title }}" style="width: 100%; height: 160px; object-fit: cover;">
+                            {% else %}
+                                <div style="width: 100%; height: 160px; background: linear-gradient(135deg, #f1f5f9, #e2e8f0); display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                                    🛏️
+                                </div>
+                            {% endif %}
+                            
+                            <div style="padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.85rem;">
+                                    <span style="font-weight: 700; color: var(--color-secondary);">{{ ad.surface }} m²</span>
+                                    <span style="font-weight: 800; color: var(--color-primary);">{{ ad.price }} €/mois</span>
+                                </div>
+                                <h4 style="font-size: 1.1rem; color: #0f172a; margin-bottom: 0.5rem;">{{ ad.title }}</h4>
+                                <p style="font-size: 0.82rem; color: #64748b; margin-bottom: auto;">{{ ad.appartement.nom }}</p>
+                                <div style="font-size: 0.75rem; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 0.75rem; margin-top: 1rem;">
+                                    Publié le {{ ad.createdAt|date('d/m/Y à H:i') }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- 3. Formulaires de Gestion (Annonce, Facture, Appartement) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2.5rem; margin-bottom: 4rem;">
             <!-- Annonce Form -->
             <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02);">
                 <h3 style="font-size: 1.35rem; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                    📢 Publier une Annonce de Chambre (avec Photo)
+                    📢 Publier une Annonce de Chambre
                 </h3>
                 
                 {{ form_start(annonceForm) }}
@@ -233,6 +268,33 @@
                         </button>
                     </div>
                 {{ form_end(factureForm) }}
+            </div>
+
+            <!-- Appartement Form -->
+            <div style="background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02); height: max-content;">
+                <h3 style="font-size: 1.35rem; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    🏢 Créer un nouvel Appartement
+                </h3>
+                
+                {{ form_start(appartementForm) }}
+                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                        <div>
+                            {{ form_label(appartementForm.nom) }}
+                            {{ form_widget(appartementForm.nom, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                        </div>
+                        <div>
+                            {{ form_label(appartementForm.adresse) }}
+                            {{ form_widget(appartementForm.adresse, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                        </div>
+                        <div>
+                            {{ form_label(appartementForm.superficieTotale) }}
+                            {{ form_widget(appartementForm.superficieTotale, {attr: {class: 'form-control', style: 'width: 100%; padding: 0.7rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 0.3rem;'}}) }}
+                        </div>
+                        <button class="btn btn-primary" type="submit" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, var(--color-accent-purple), #4338ca); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2);">
+                            Créer l'appartement
+                        </button>
+                    </div>
+                {{ form_end(appartementForm) }}
             </div>
         </div>
 
